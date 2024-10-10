@@ -4,6 +4,7 @@ from datetime import datetime
 import json
 from dotenv import load_dotenv
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 load_dotenv()
 
@@ -74,7 +75,10 @@ def get_tags():
         print(response.json())
         return []
     
-def get_numbers_by_tags(tag_names):
+import requests
+import json
+
+def fetch_contacts_for_tag(tag_name):
     base_url = 'https://dm62yg.api.infobip.com/people/2/persons'
     headers = {
         'Authorization': f'App {API_KEY_INFOBIP}',
@@ -82,17 +86,27 @@ def get_numbers_by_tags(tag_names):
     }
 
     contacts = []
-    for tag_name in tag_names:
-        filter_criteria = {
-            "#and": [
-                {"#contains": {"tags": tag_name}}
-            ]
+    filter_criteria = {
+        "#and": [
+            {"#contains": {"tags": tag_name}}
+        ]
+    }
+    
+    more_results = True
+    page_number = 0
+    limit = 1000
+
+    while more_results:
+        params = {
+            'filter': json.dumps(filter_criteria),
+            'limit': limit,
+            'pageNumber': page_number
         }
-        params = {'filter': json.dumps(filter_criteria)}
         response = requests.get(base_url, headers=headers, params=params)
 
         if response.status_code == 200:
-            persons = response.json().get('persons', [])
+            data = response.json()
+            persons = data.get('persons', [])
             for person in persons:
                 contact_info = person.get('contactInformation', {})
                 phones = contact_info.get('phone', [])
@@ -100,12 +114,37 @@ def get_numbers_by_tags(tag_names):
                     number = phone.get('number')
                     if number and number not in contacts:
                         contacts.append(number)
+            
+            more_results = len(persons) == limit
+            page_number += 1
         else:
             print(f'Erro ao obter contatos para a tag {tag_name}: {response.status_code}')
             print(response.json())
+            more_results = False
+
     return contacts
 
-def get_emails_by_tags(tag_names):
+def get_numbers_by_tags(tag_names):
+    all_contacts = []
+
+    # Usar ThreadPoolExecutor para executar chamadas simultâneas
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        # Mapeie as tags para a função fetch_contacts_for_tag
+        futures = {executor.submit(fetch_contacts_for_tag, tag_name): tag_name for tag_name in tag_names}
+        
+        # Processar os resultados conforme eles são completados
+        for future in futures:
+            try:
+                contacts = future.result()
+                all_contacts.extend(contacts)
+            except Exception as exc:
+                tag_name = futures[future]
+                print(f'Erro ao processar a tag {tag_name}: {exc}')
+
+    # Remover duplicatas, caso existam
+    return list(set(all_contacts))
+
+def fetch_emails_for_tag(tag_name):
     base_url = 'https://dm62yg.api.infobip.com/people/2/persons'
     headers = {
         'Authorization': f'App {API_KEY_INFOBIP}',
@@ -113,17 +152,27 @@ def get_emails_by_tags(tag_names):
     }
 
     emails = []
-    for tag_name in tag_names:
-        filter_criteria = {
-            "#and": [
-                {"#contains": {"tags": tag_name}}
-            ]
+    filter_criteria = {
+        "#and": [
+            {"#contains": {"tags": tag_name}}
+        ]
+    }
+    
+    more_results = True
+    page_number = 0
+    limit = 1000
+
+    while more_results:
+        params = {
+            'filter': json.dumps(filter_criteria),
+            'limit': limit,
+            'pageNumber': page_number
         }
-        params = {'filter': json.dumps(filter_criteria)}
         response = requests.get(base_url, headers=headers, params=params)
 
         if response.status_code == 200:
-            persons = response.json().get('persons', [])
+            data = response.json()
+            persons = data.get('persons', [])
             for person in persons:
                 contact_info = person.get('contactInformation', {})
                 email_addresses = contact_info.get('email', [])
@@ -131,10 +180,35 @@ def get_emails_by_tags(tag_names):
                     address = email.get('address')
                     if address and address not in emails:
                         emails.append(address)
+            
+            more_results = len(persons) == limit
+            page_number += 1
         else:
             print(f'Erro ao obter emails para a tag {tag_name}: {response.status_code}')
             print(response.json())
+            more_results = False
+
     return emails
+
+def get_emails_by_tags(tag_names):
+    all_emails = []
+
+    # Usar ThreadPoolExecutor para executar chamadas simultâneas
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        # Mapeie as tags para a função fetch_emails_for_tag
+        futures = {executor.submit(fetch_emails_for_tag, tag_name): tag_name for tag_name in tag_names}
+        
+        # Processar os resultados conforme eles são completados
+        for future in futures:
+            try:
+                emails = future.result()
+                all_emails.extend(emails)
+            except Exception as exc:
+                tag_name = futures[future]
+                print(f'Erro ao processar a tag {tag_name}: {exc}')
+
+    # Remover duplicatas, caso existam
+    return list(set(all_emails))
 
 def enviar_alerta_whatsapp_com_template(destinatario, template_name, parametros, language_code='pt_BR'):
     URL = 'https://api.infobip.com/whatsapp/1/message/template'

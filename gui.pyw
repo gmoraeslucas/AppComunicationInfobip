@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from main import get_crisis_from_key, get_tags, get_numbers_by_tags, get_emails_by_tags, enviar_alerta_whatsapp_com_template, enviar_email_com_template_infobip, escolher_templates, process_issue_data, verificar_placeholders, format_template, format_template_html
 from PIL import Image, ImageTk
 
-tema_atual = "morph"
+tema_atual = "flatly"
 def main():
     def create_tag_checkboxes():
         tags = get_tags()
@@ -20,7 +20,7 @@ def main():
             tags_vars_tecnico[tag] = var
     
     def populate_negocios_tags():
-        tags_to_activate = ["Command_Center", "Governança de TI"]
+        tags_to_activate = ["Command_Center", "Negócios", "Governança de TI"]
         for tag in tags_to_activate:
             var = IntVar()
             var.set(1)
@@ -53,30 +53,34 @@ def main():
     
     def choose_theme():
         global tema_atual
-        if tema_atual == "cappuccino":
+        if tema_atual == "flatly":
             root.style.theme_use("darkly")
             tema_atual = "darkly"
         else:
-            root.style.theme_use("cappuccino")
-            tema_atual = "cappuccino"
+            root.style.theme_use("flatly")
+            tema_atual = "flatly"
 
     def send_message():
         global destinatarios_tecnico, destinatarios_negocios, emails_tecnico, emails_negocios
         
         selected_tags_tecnico = [tag for tag, var in tags_vars_tecnico.items() if var.get() == 1]
         destinatarios_tecnico = get_numbers_by_tags(selected_tags_tecnico)
+        print(f"Técnico:{len(destinatarios_tecnico)}")
         emails_tecnico = get_emails_by_tags(selected_tags_tecnico)
-        
+        print(f"Técnico Emails:{len(emails_tecnico)}")
+
         if not destinatarios_tecnico:
-            messagebox.showerror("Erro", "Nenhum destinatário encontrado para as tags técnicas predefinidas.")
+            messagebox.showerror("Erro", "Nenhum destinatário encontrado para as tags técnicas.")
             return
 
         selected_tags_negocios = [tag for tag, var in tags_vars_negocios.items() if var.get() == 1]
         destinatarios_negocios = get_numbers_by_tags(selected_tags_negocios)
+        print(f"Negócios:{len(destinatarios_negocios)}")
         emails_negocios = get_emails_by_tags(selected_tags_negocios)
+        print(f"Negócios Emails:{len(emails_negocios)}")
         
         if not destinatarios_negocios:
-            messagebox.showerror("Erro", "Nenhum destinatário encontrado para as tags de negócios predefinidas.")
+            messagebox.showerror("Erro", "Nenhum destinatário encontrado para as tags de negócios.")
             return
             
         tipo_alerta = tipo_alerta_var.get().lower()
@@ -174,10 +178,10 @@ def main():
         messagebox.showinfo("Sucesso", "Mensagens e emails enviados com sucesso!")
 
     global status_alerta_var
-    root = ttk.Window(themename="cappuccino")
+    root = ttk.Window(themename="flatly")
     root.title("Envio de Alertas")
     window_width = 730
-    window_height = 930
+    window_height = 960
     position_right = int(root.winfo_screenwidth() / 2 - window_width / 2)
     position_top = int(root.winfo_screenheight() / 2 - window_height / 1.75)
     root.geometry(f"{window_width}x{window_height}+{position_right}+{position_top}")
@@ -245,17 +249,17 @@ def main():
     tags_frame_negocios = scrolled_frame_negocios
     populate_negocios_tags()
 
-    ttk.Button(border_frame, text="Enviar mensagem", command=send_message).pack(pady=20)
+    ttk.Button(border_frame, text="Enviar mensagem", command=send_message).pack(pady=10)
 
     logos_frame = ttk.Frame(border_frame)
     logos_frame.pack(pady=10)
 
     logo1_img = Image.open("images/infobip.png")
-    logo1_img = logo1_img.resize((150, 90), Image.Resampling.LANCZOS)
+    logo1_img = logo1_img.resize((140, 85), Image.Resampling.LANCZOS)
     logo1 = ImageTk.PhotoImage(logo1_img)
 
     logo2_img = Image.open("images/seguros-unimed.png")
-    logo2_img = logo2_img.resize((130, 55), Image.Resampling.LANCZOS)
+    logo2_img = logo2_img.resize((120, 50), Image.Resampling.LANCZOS)
     logo2 = ImageTk.PhotoImage(logo2_img)
 
     logo1_label = ttk.Label(logos_frame, image=logo1)
