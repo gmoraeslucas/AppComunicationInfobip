@@ -65,7 +65,6 @@ def main():
             tema_atual = "flatly"
 
     def send_message():
-        logging.info("Iniciando processo de envio de mensagem.")
 
         global destinatarios_tecnico, destinatarios_negocios, emails_tecnico, emails_negocios
         
@@ -103,7 +102,6 @@ def main():
             issue_impacto_normalizado = impacto_normalizado_entry.get()
 
             templates = escolher_templates(tipo_alerta, status_alerta, issue_checkpoint, issue_impacto_normalizado)
-            print(templates)
             if templates:
                 if not verificar_placeholders(templates):
                     messagebox.showerror("Erro", "Um ou mais placeholders estão vazios.")
@@ -152,7 +150,6 @@ def main():
         ttk.Button(confirmation_window, text="Confirmar Envio", command=lambda: confirm_send(confirmation_window, templates)).pack(pady=10)
 
     def confirm_send(confirmation_window, templates):
-        logging.info("Confirmação de envio iniciada.")
         confirmation_window.destroy()
 
         def send_messages():
@@ -293,5 +290,4 @@ def main():
     root.mainloop()
 
 if __name__ == "__main__":
-    logging.info("Aplicação iniciada.")
     main()

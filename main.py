@@ -59,7 +59,7 @@ def format_date(date_str):
         formatted_date = date_obj.strftime("%d/%m - %H:%M")
         return formatted_date
     except ValueError as e:
-        print(f"Erro ao formatar a data: {e}")
+        logging.error(f"Erro ao formatar a data: {e}")
         return "Data inválida"
 
 def get_tags():
@@ -76,7 +76,6 @@ def get_tags():
         return [tag['name'] for tag in tags.get('tags', [])]
     else:
         logging.error(f"Erro ao obter tags: {response.status_code} - {response.json()}")
-        print(response.json())
         return []
     
 import requests
@@ -184,8 +183,7 @@ def fetch_emails_for_tag(tag_name):
             more_results = len(persons) == limit
             page_number += 1
         else:
-            print(f'Erro ao obter emails para a tag {tag_name}: {response.status_code}')
-            print(response.json())
+            logging.error(f"Erro ao obter emails para a tag {tag_name}: {response.status_code} - {response.json()}")
             more_results = False
 
     return emails
@@ -202,7 +200,7 @@ def get_emails_by_tags(tag_names):
                 all_emails.extend(emails)
             except Exception as exc:
                 tag_name = futures[future]
-                print(f'Erro ao processar a tag {tag_name}: {exc}')
+                logging.error(f"Erro ao processar a tag {tag_name}: {exc}")
 
     return list(set(all_emails))
 
@@ -232,16 +230,12 @@ def enviar_alerta_whatsapp_com_template(destinatario, template_name, parametros,
         ]
     }
 
-    print("Dados que serão enviados:")
-    print(json.dumps(payload, indent=4))
-
     response = requests.post(URL, headers=headers, data=json.dumps(payload))
 
     if response.status_code == 200:
-        print(f'Mensagem enviada com sucesso para {destinatario}!')
+        logging.info(f'Mensagem enviada com sucesso para {destinatario}!')
     else:
-        print(f'Falha ao enviar a mensagem para {destinatario}. Status code: {response.status_code}')
-        print(response.json())
+        logging.error(f'Falha ao enviar a mensagem para {destinatario}. Status code: {response.status_code}. Detalhes da resposta: {response.json()}')
 
 import requests
 
@@ -279,12 +273,11 @@ def enviar_email_com_template_infobip(destinatario, assunto, corpo_email_html):
 
         response = requests.post(url, headers=headers, data=data, files=files)
 
-    if response.status_code == 200:
-        print(f'Email enviado com sucesso para {destinatario}!')
-    else:
-        print(f'Falha ao enviar email para {destinatario}. Status code: {response.status_code}')
-        print(response.json())
 
+    if response.status_code == 200:
+        logging.info(f'Email enviado com sucesso para {destinatario}!')
+    else:
+        logging.error(f'Falha ao enviar email para {destinatario}. Status code: {response.status_code}. Detalhes da resposta: {response.json()}')
 
 def escolher_templates(tipo_alerta, status, issue_checkpoint, issue_impacto_normalizado):
     templates_crise = {
@@ -336,7 +329,7 @@ def verificar_placeholders(templates):
     for template_name, params in templates:
         missing_placeholders = [param for param in params if param == '']
         if missing_placeholders:
-            print(f"Erro: Template '{template_name}' contém placeholders vazios: {missing_placeholders}")
+            logging.info(f"Erro: Template '{template_name}' contém placeholders vazios: {missing_placeholders}")
             return False
     return True
 
@@ -346,7 +339,7 @@ def format_checkpoint_date(date_str):
         formatted_date = date_obj.strftime("%d/%m - %H:%M")
         return formatted_date
     except ValueError as e:
-        print(f"Erro ao formatar a data do checkpoint: {e}")
+        logging.error(f"Erro ao formatar a data do checkpoint: {e}")
         return "Data inválida"
     
 def process_issue_data(issue_data):
