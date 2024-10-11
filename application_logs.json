@@ -1,0 +1,547 @@
+2024-10-11 17:18:47,544 Aplicação iniciada.
+2024-10-11 17:18:48,145 Obtendo tags da API Infobip.
+2024-10-11 17:18:48,149 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:18:49,954 https://dm62yg.api.infobip.com:443 "GET /people/2/tags HTTP/1.1" 200 4654
+2024-10-11 17:18:50,094 STREAM b'IHDR' 16 13
+2024-10-11 17:18:50,095 STREAM b'pHYs' 41 9
+2024-10-11 17:18:50,095 STREAM b'iTXt' 62 9639
+2024-10-11 17:18:50,095 STREAM b'IDAT' 9713 39378
+2024-10-11 17:18:50,108 STREAM b'IHDR' 16 13
+2024-10-11 17:18:50,108 STREAM b'pHYs' 41 9
+2024-10-11 17:18:50,108 STREAM b'IDAT' 62 8192
+2024-10-11 17:20:23,949 Iniciando processo de envio de mensagem.
+2024-10-11 17:20:23,949 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:20:23,951 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:20:25,177 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:20:25,181 Técnico: 4 destinatários encontrados.
+2024-10-11 17:20:25,185 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:20:26,382 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:20:26,386 Técnico Emails: 4 encontrados.
+2024-10-11 17:20:26,386 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:20:26,390 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:20:27,644 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:20:27,646 Negócios: 4 destinatários encontrados.
+2024-10-11 17:20:27,647 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:20:28,866 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:20:28,870 Negócios Emails: 4 encontrados.
+2024-10-11 17:20:28,871 Buscando crise com chave: GV-216638
+2024-10-11 17:20:28,873 Starting new HTTPS connection (1): ti-segurosunimed-soa.atlassian.net:443
+2024-10-11 17:20:30,407 https://ti-segurosunimed-soa.atlassian.net:443 "GET /rest/api/3/search?jql=project%3D+Governan%C3%A7a+AND+type+%3D+Crise+AND+key+%3D+GV-216638&maxResults=1 HTTP/1.1" 200 None
+2024-10-11 17:20:30,410 Conexão com Jira bem-sucedida para chave GV-216638.
+2024-10-11 17:21:07,378 Iniciando processo de envio de mensagem.
+2024-10-11 17:21:07,378 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:21:07,380 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:21:08,638 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:21:08,640 Técnico: 4 destinatários encontrados.
+2024-10-11 17:21:08,642 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:21:09,864 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:21:09,866 Técnico Emails: 4 encontrados.
+2024-10-11 17:21:09,866 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:21:09,868 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:21:11,062 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:21:11,064 Negócios: 4 destinatários encontrados.
+2024-10-11 17:21:11,066 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:21:12,274 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:21:12,276 Negócios Emails: 4 encontrados.
+2024-10-11 17:21:12,276 Buscando crise com chave: GV-216638
+2024-10-11 17:21:12,277 Starting new HTTPS connection (1): ti-segurosunimed-soa.atlassian.net:443
+2024-10-11 17:21:13,877 https://ti-segurosunimed-soa.atlassian.net:443 "GET /rest/api/3/search?jql=project%3D+Governan%C3%A7a+AND+type+%3D+Crise+AND+key+%3D+GV-216638&maxResults=1 HTTP/1.1" 200 None
+2024-10-11 17:21:13,882 Conexão com Jira bem-sucedida para chave GV-216638.
+2024-10-11 17:22:32,115 Confirmação de envio iniciada.
+2024-10-11 17:22:32,125 Enviando mensagem WhatsApp para 5511976220522.
+2024-10-11 17:22:32,129 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:22:32,129 Enviando mensagem WhatsApp para 5511962460420.
+2024-10-11 17:22:32,135 Enviando mensagem WhatsApp para 5511958968130.
+2024-10-11 17:22:32,137 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:22:32,142 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:22:32,143 Enviando mensagem WhatsApp para 5511988587093.
+2024-10-11 17:22:32,150 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:22:32,155 Enviando mensagem WhatsApp para 5511976220522.
+2024-10-11 17:22:32,159 Enviando mensagem WhatsApp para 5511962460420.
+2024-10-11 17:22:32,162 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:22:32,167 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:22:32,170 Enviando mensagem WhatsApp para 5511958968130.
+2024-10-11 17:22:32,173 Enviando mensagem WhatsApp para 5511988587093.
+2024-10-11 17:22:32,175 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:22:32,178 Enviando email para lucas.moraes.stefanini@segurosunimed.com.br.
+2024-10-11 17:22:32,179 Enviando email para nicolly.mattos.stefanini@segurosunimed.com.br.
+2024-10-11 17:22:32,180 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:22:32,180 Enviando email para ruan.santos.stefanini@segurosunimed.com.br.
+2024-10-11 17:22:32,180 Enviando email para renato.rodrigues.stefanini@segurosunimed.com.br.
+2024-10-11 17:22:32,181 Enviando email para lucas.moraes.stefanini@segurosunimed.com.br.
+2024-10-11 17:22:32,181 Enviando email para nicolly.mattos.stefanini@segurosunimed.com.br.
+2024-10-11 17:22:32,181 Enviando email para ruan.santos.stefanini@segurosunimed.com.br.
+2024-10-11 17:22:32,181 Enviando email para renato.rodrigues.stefanini@segurosunimed.com.br.
+2024-10-11 17:22:32,189 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:22:32,190 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:22:33,771 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:22:33,775 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:22:33,795 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:22:33,800 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:22:33,826 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:22:33,827 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:22:33,835 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:22:33,835 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:22:33,907 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:22:33,911 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:22:33,982 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:22:33,986 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:22:34,029 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:22:34,045 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:22:34,738 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:22:34,751 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:22:35,976 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:22:35,990 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:22:36,025 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:22:36,034 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:22:36,057 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:22:36,132 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:22:36,136 Mensagens e emails enviados com sucesso.
+2024-10-11 17:24:58,313 Iniciando processo de envio de mensagem.
+2024-10-11 17:24:58,313 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:24:58,315 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:24:59,584 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:24:59,588 Técnico: 4 destinatários encontrados.
+2024-10-11 17:24:59,591 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:00,811 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:25:00,815 Técnico Emails: 4 encontrados.
+2024-10-11 17:25:00,815 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:25:00,819 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:02,011 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:25:02,013 Negócios: 4 destinatários encontrados.
+2024-10-11 17:25:02,015 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:03,220 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:25:03,224 Negócios Emails: 4 encontrados.
+2024-10-11 17:25:03,225 Buscando crise com chave: GV-216638
+2024-10-11 17:25:03,227 Starting new HTTPS connection (1): ti-segurosunimed-soa.atlassian.net:443
+2024-10-11 17:25:04,747 https://ti-segurosunimed-soa.atlassian.net:443 "GET /rest/api/3/search?jql=project%3D+Governan%C3%A7a+AND+type+%3D+Crise+AND+key+%3D+GV-216638&maxResults=1 HTTP/1.1" 200 None
+2024-10-11 17:25:04,748 Conexão com Jira bem-sucedida para chave GV-216638.
+2024-10-11 17:25:07,959 Iniciando processo de envio de mensagem.
+2024-10-11 17:25:07,960 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:25:07,962 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:09,236 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:25:09,238 Técnico: 4 destinatários encontrados.
+2024-10-11 17:25:09,239 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:10,501 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:25:10,504 Técnico Emails: 4 encontrados.
+2024-10-11 17:25:10,504 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:25:10,505 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:11,745 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:25:11,747 Negócios: 4 destinatários encontrados.
+2024-10-11 17:25:11,751 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:12,977 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:25:12,980 Negócios Emails: 4 encontrados.
+2024-10-11 17:25:12,980 Buscando crise com chave: GV-216638
+2024-10-11 17:25:12,981 Starting new HTTPS connection (1): ti-segurosunimed-soa.atlassian.net:443
+2024-10-11 17:25:14,552 https://ti-segurosunimed-soa.atlassian.net:443 "GET /rest/api/3/search?jql=project%3D+Governan%C3%A7a+AND+type+%3D+Crise+AND+key+%3D+GV-216638&maxResults=1 HTTP/1.1" 200 None
+2024-10-11 17:25:14,556 Conexão com Jira bem-sucedida para chave GV-216638.
+2024-10-11 17:25:25,079 Confirmação de envio iniciada.
+2024-10-11 17:25:25,090 Enviando mensagem WhatsApp para 5511976220522.
+2024-10-11 17:25:25,095 Enviando mensagem WhatsApp para 5511962460420.
+2024-10-11 17:25:25,097 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:25:25,102 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:25:25,105 Enviando mensagem WhatsApp para 5511958968130.
+2024-10-11 17:25:25,112 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:25:25,119 Enviando mensagem WhatsApp para 5511988587093.
+2024-10-11 17:25:25,120 Enviando mensagem WhatsApp para 5511976220522.
+2024-10-11 17:25:25,123 Enviando mensagem WhatsApp para 5511962460420.
+2024-10-11 17:25:25,125 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:25:25,129 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:25:25,133 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:25:25,139 Enviando mensagem WhatsApp para 5511958968130.
+2024-10-11 17:25:25,142 Enviando mensagem WhatsApp para 5511988587093.
+2024-10-11 17:25:25,144 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:25:25,146 Enviando email para lucas.moraes.stefanini@segurosunimed.com.br.
+2024-10-11 17:25:25,148 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:25:25,148 Enviando email para nicolly.mattos.stefanini@segurosunimed.com.br.
+2024-10-11 17:25:25,149 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:25,149 Enviando email para ruan.santos.stefanini@segurosunimed.com.br.
+2024-10-11 17:25:25,150 Enviando email para renato.rodrigues.stefanini@segurosunimed.com.br.
+2024-10-11 17:25:25,150 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:25,151 Enviando email para lucas.moraes.stefanini@segurosunimed.com.br.
+2024-10-11 17:25:25,151 Enviando email para nicolly.mattos.stefanini@segurosunimed.com.br.
+2024-10-11 17:25:25,151 Enviando email para ruan.santos.stefanini@segurosunimed.com.br.
+2024-10-11 17:25:25,151 Enviando email para renato.rodrigues.stefanini@segurosunimed.com.br.
+2024-10-11 17:25:26,813 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:25:26,817 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:26,823 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:25:26,830 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:26,842 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:25:26,846 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:26,867 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:25:26,871 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:27,131 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:25:27,137 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:27,175 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:25:27,180 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:25:27,196 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:25:27,491 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:25:27,786 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:25:27,813 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:25:28,916 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:25:29,001 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:25:29,029 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:25:29,029 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:25:29,237 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:25:29,264 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:25:29,269 Mensagens e emails enviados com sucesso.
+2024-10-11 17:30:48,800 Iniciando processo de envio de mensagem.
+2024-10-11 17:30:48,801 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:30:48,803 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:30:50,104 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:30:50,108 Técnico: 4 destinatários encontrados.
+2024-10-11 17:30:50,111 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:30:51,381 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:30:51,386 Técnico Emails: 4 encontrados.
+2024-10-11 17:30:51,386 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:30:51,389 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:30:52,661 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:30:52,664 Negócios: 4 destinatários encontrados.
+2024-10-11 17:30:52,666 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:30:53,908 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:30:53,911 Negócios Emails: 4 encontrados.
+2024-10-11 17:30:53,911 Buscando crise com chave: GV-216638
+2024-10-11 17:30:53,912 Starting new HTTPS connection (1): ti-segurosunimed-soa.atlassian.net:443
+2024-10-11 17:30:55,403 https://ti-segurosunimed-soa.atlassian.net:443 "GET /rest/api/3/search?jql=project%3D+Governan%C3%A7a+AND+type+%3D+Crise+AND+key+%3D+GV-216638&maxResults=1 HTTP/1.1" 200 None
+2024-10-11 17:30:55,407 Conexão com Jira bem-sucedida para chave GV-216638.
+2024-10-11 17:32:38,688 Aplicação iniciada.
+2024-10-11 17:32:38,913 Obtendo tags da API Infobip.
+2024-10-11 17:32:38,922 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:32:40,207 https://dm62yg.api.infobip.com:443 "GET /people/2/tags HTTP/1.1" 200 4654
+2024-10-11 17:32:40,395 STREAM b'IHDR' 16 13
+2024-10-11 17:32:40,396 STREAM b'pHYs' 41 9
+2024-10-11 17:32:40,396 STREAM b'iTXt' 62 9639
+2024-10-11 17:32:40,396 STREAM b'IDAT' 9713 39378
+2024-10-11 17:32:40,404 STREAM b'IHDR' 16 13
+2024-10-11 17:32:40,404 STREAM b'pHYs' 41 9
+2024-10-11 17:32:40,404 STREAM b'IDAT' 62 8192
+2024-10-11 17:32:51,166 Iniciando processo de envio de mensagem.
+2024-10-11 17:32:51,167 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:32:51,169 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:32:52,420 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:32:52,423 Técnico: 4 destinatários encontrados.
+2024-10-11 17:32:52,427 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:32:53,643 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:32:53,647 Técnico Emails: 4 encontrados.
+2024-10-11 17:32:53,647 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:32:53,650 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:32:54,884 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:32:54,888 Negócios: 4 destinatários encontrados.
+2024-10-11 17:32:54,893 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:32:56,108 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:32:56,112 Negócios Emails: 4 encontrados.
+2024-10-11 17:32:56,112 Buscando crise com chave: GV-216638
+2024-10-11 17:32:56,115 Starting new HTTPS connection (1): ti-segurosunimed-soa.atlassian.net:443
+2024-10-11 17:32:57,818 https://ti-segurosunimed-soa.atlassian.net:443 "GET /rest/api/3/search?jql=project%3D+Governan%C3%A7a+AND+type+%3D+Crise+AND+key+%3D+GV-216638&maxResults=1 HTTP/1.1" 200 None
+2024-10-11 17:32:57,821 Conexão com Jira bem-sucedida para chave GV-216638.
+2024-10-11 17:32:59,372 Confirmação de envio iniciada.
+2024-10-11 17:32:59,381 Enviando mensagem WhatsApp para 5511988587093.
+2024-10-11 17:32:59,383 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:32:59,388 Enviando mensagem WhatsApp para 5511962460420.
+2024-10-11 17:32:59,389 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:32:59,399 Enviando mensagem WhatsApp para 5511958968130.
+2024-10-11 17:32:59,401 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:32:59,403 Enviando mensagem WhatsApp para 5511976220522.
+2024-10-11 17:32:59,405 Enviando mensagem WhatsApp para 5511988587093.
+2024-10-11 17:32:59,405 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:32:59,406 Enviando mensagem WhatsApp para 5511962460420.
+2024-10-11 17:32:59,407 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:32:59,408 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:32:59,419 Enviando mensagem WhatsApp para 5511958968130.
+2024-10-11 17:32:59,420 Enviando mensagem WhatsApp para 5511976220522.
+2024-10-11 17:32:59,420 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:32:59,422 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:32:59,422 Enviando email para nicolly.mattos.stefanini@segurosunimed.com.br.
+2024-10-11 17:32:59,423 Enviando email para ruan.santos.stefanini@segurosunimed.com.br.
+2024-10-11 17:32:59,423 Enviando email para renato.rodrigues.stefanini@segurosunimed.com.br.
+2024-10-11 17:32:59,426 Enviando email para lucas.moraes.stefanini@segurosunimed.com.br.
+2024-10-11 17:32:59,426 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:32:59,426 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:32:59,427 Enviando email para nicolly.mattos.stefanini@segurosunimed.com.br.
+2024-10-11 17:32:59,427 Enviando email para ruan.santos.stefanini@segurosunimed.com.br.
+2024-10-11 17:32:59,427 Enviando email para renato.rodrigues.stefanini@segurosunimed.com.br.
+2024-10-11 17:32:59,427 Enviando email para lucas.moraes.stefanini@segurosunimed.com.br.
+2024-10-11 17:33:00,996 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:33:01,000 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:33:01,002 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:33:01,005 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:33:01,012 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:33:01,015 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:33:01,030 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:33:01,034 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:33:01,199 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:33:01,203 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:33:01,225 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:33:01,229 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:33:01,267 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:33:01,285 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:33:01,913 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:33:01,952 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:33:03,045 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:33:03,103 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:33:03,115 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:33:03,236 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:33:03,273 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:33:03,336 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:33:03,340 Mensagens e emails enviados com sucesso.
+2024-10-11 17:34:11,463 Aplicação iniciada.
+2024-10-11 17:34:11,591 Obtendo tags da API Infobip.
+2024-10-11 17:34:11,593 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:34:13,048 https://dm62yg.api.infobip.com:443 "GET /people/2/tags HTTP/1.1" 200 4654
+2024-10-11 17:34:13,113 STREAM b'IHDR' 16 13
+2024-10-11 17:34:13,113 STREAM b'pHYs' 41 9
+2024-10-11 17:34:13,113 STREAM b'iTXt' 62 9639
+2024-10-11 17:34:13,113 STREAM b'IDAT' 9713 39378
+2024-10-11 17:34:13,123 STREAM b'IHDR' 16 13
+2024-10-11 17:34:13,123 STREAM b'pHYs' 41 9
+2024-10-11 17:34:13,123 STREAM b'IDAT' 62 8192
+2024-10-11 17:34:57,773 Aplicação iniciada.
+2024-10-11 17:34:57,917 Obtendo tags da API Infobip.
+2024-10-11 17:34:57,920 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:34:59,242 https://dm62yg.api.infobip.com:443 "GET /people/2/tags HTTP/1.1" 200 4654
+2024-10-11 17:34:59,296 STREAM b'IHDR' 16 13
+2024-10-11 17:34:59,296 STREAM b'pHYs' 41 9
+2024-10-11 17:34:59,296 STREAM b'iTXt' 62 9639
+2024-10-11 17:34:59,296 STREAM b'IDAT' 9713 39378
+2024-10-11 17:34:59,304 STREAM b'IHDR' 16 13
+2024-10-11 17:34:59,304 STREAM b'pHYs' 41 9
+2024-10-11 17:34:59,305 STREAM b'IDAT' 62 8192
+2024-10-11 17:35:44,212 Iniciando processo de envio de mensagem.
+2024-10-11 17:35:44,213 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:35:44,215 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:35:45,474 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:35:45,479 Técnico: 4 destinatários encontrados.
+2024-10-11 17:35:45,483 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:35:46,719 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:35:46,723 Técnico Emails: 4 encontrados.
+2024-10-11 17:35:46,724 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:35:46,727 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:35:48,016 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:35:48,018 Negócios: 4 destinatários encontrados.
+2024-10-11 17:35:48,020 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:35:49,490 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:35:49,493 Negócios Emails: 4 encontrados.
+2024-10-11 17:35:49,493 Buscando crise com chave: GV-216638
+2024-10-11 17:35:49,494 Starting new HTTPS connection (1): ti-segurosunimed-soa.atlassian.net:443
+2024-10-11 17:35:51,122 https://ti-segurosunimed-soa.atlassian.net:443 "GET /rest/api/3/search?jql=project%3D+Governan%C3%A7a+AND+type+%3D+Crise+AND+key+%3D+GV-216638&maxResults=1 HTTP/1.1" 200 None
+2024-10-11 17:35:51,128 Conexão com Jira bem-sucedida para chave GV-216638.
+2024-10-11 17:36:20,615 Confirmação de envio iniciada.
+2024-10-11 17:36:20,624 Enviando mensagem WhatsApp para 5511988587093.
+2024-10-11 17:36:20,628 Enviando mensagem WhatsApp para 5511958968130.
+2024-10-11 17:36:20,630 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:36:20,633 Enviando mensagem WhatsApp para 5511962460420.
+2024-10-11 17:36:20,636 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:36:20,640 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:36:20,641 Enviando mensagem WhatsApp para 5511976220522.
+2024-10-11 17:36:20,647 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:36:20,662 Enviando mensagem WhatsApp para 5511988587093.
+2024-10-11 17:36:20,662 Enviando mensagem WhatsApp para 5511958968130.
+2024-10-11 17:36:20,666 Enviando mensagem WhatsApp para 5511962460420.
+2024-10-11 17:36:20,668 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:36:20,670 Enviando mensagem WhatsApp para 5511976220522.
+2024-10-11 17:36:20,672 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:36:20,681 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:36:20,682 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:36:20,684 Enviando email para lucas.moraes.stefanini@segurosunimed.com.br.
+2024-10-11 17:36:20,685 Enviando email para ruan.santos.stefanini@segurosunimed.com.br.
+2024-10-11 17:36:20,687 Enviando email para nicolly.mattos.stefanini@segurosunimed.com.br.
+2024-10-11 17:36:20,687 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:36:20,687 Enviando email para renato.rodrigues.stefanini@segurosunimed.com.br.
+2024-10-11 17:36:20,687 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:36:20,688 Enviando email para lucas.moraes.stefanini@segurosunimed.com.br.
+2024-10-11 17:36:20,688 Enviando email para ruan.santos.stefanini@segurosunimed.com.br.
+2024-10-11 17:36:20,688 Enviando email para nicolly.mattos.stefanini@segurosunimed.com.br.
+2024-10-11 17:36:20,688 Enviando email para renato.rodrigues.stefanini@segurosunimed.com.br.
+2024-10-11 17:36:22,472 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:36:22,476 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:36:22,493 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:36:22,499 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:36:22,511 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:36:22,515 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:36:22,538 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:36:22,540 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:36:22,544 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:36:22,545 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:36:22,583 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:36:22,587 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:36:22,602 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:36:22,605 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:36:23,297 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:36:23,322 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:36:24,803 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:36:24,820 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:36:24,999 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:36:25,007 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:36:25,466 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:36:25,554 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:36:25,559 Mensagens e emails enviados com sucesso.
+2024-10-11 17:40:43,869 Aplicação iniciada.
+2024-10-11 17:40:43,998 Obtendo tags da API Infobip.
+2024-10-11 17:40:44,000 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:40:45,255 https://dm62yg.api.infobip.com:443 "GET /people/2/tags HTTP/1.1" 200 4654
+2024-10-11 17:40:45,309 STREAM b'IHDR' 16 13
+2024-10-11 17:40:45,309 STREAM b'pHYs' 41 9
+2024-10-11 17:40:45,309 STREAM b'iTXt' 62 9639
+2024-10-11 17:40:45,309 STREAM b'IDAT' 9713 39378
+2024-10-11 17:40:45,317 STREAM b'IHDR' 16 13
+2024-10-11 17:40:45,317 STREAM b'pHYs' 41 9
+2024-10-11 17:40:45,317 STREAM b'IDAT' 62 8192
+2024-10-11 17:41:59,663 Aplicação iniciada.
+2024-10-11 17:41:59,794 Obtendo tags da API Infobip.
+2024-10-11 17:41:59,796 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:42:00,999 https://dm62yg.api.infobip.com:443 "GET /people/2/tags HTTP/1.1" 200 4654
+2024-10-11 17:42:01,052 STREAM b'IHDR' 16 13
+2024-10-11 17:42:01,052 STREAM b'pHYs' 41 9
+2024-10-11 17:42:01,053 STREAM b'iTXt' 62 9639
+2024-10-11 17:42:01,053 STREAM b'IDAT' 9713 39378
+2024-10-11 17:42:01,061 STREAM b'IHDR' 16 13
+2024-10-11 17:42:01,061 STREAM b'pHYs' 41 9
+2024-10-11 17:42:01,061 STREAM b'IDAT' 62 8192
+2024-10-11 17:42:46,295 Iniciando processo de envio de mensagem.
+2024-10-11 17:42:46,296 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:42:46,298 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:42:47,559 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:42:47,563 Técnico: 4 destinatários encontrados.
+2024-10-11 17:42:47,567 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:42:48,797 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:42:48,799 Técnico Emails: 4 encontrados.
+2024-10-11 17:42:48,799 Obtendo números de telefone para as tags: ['Command_Center', 'Fo']
+2024-10-11 17:42:48,802 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:42:48,802 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:42:50,057 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Fo%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 72
+2024-10-11 17:42:50,074 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:42:50,077 Negócios: 4 destinatários encontrados.
+2024-10-11 17:42:50,079 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:42:50,080 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:42:51,341 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:42:51,344 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Fo%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 72
+2024-10-11 17:42:51,346 Negócios Emails: 4 encontrados.
+2024-10-11 17:42:51,346 Buscando crise com chave: GV-216638
+2024-10-11 17:42:51,347 Starting new HTTPS connection (1): ti-segurosunimed-soa.atlassian.net:443
+2024-10-11 17:42:53,100 https://ti-segurosunimed-soa.atlassian.net:443 "GET /rest/api/3/search?jql=project%3D+Governan%C3%A7a+AND+type+%3D+Crise+AND+key+%3D+GV-216638&maxResults=1 HTTP/1.1" 200 None
+2024-10-11 17:42:53,103 Conexão com Jira bem-sucedida para chave GV-216638.
+2024-10-11 17:52:17,375 Aplicação iniciada.
+2024-10-11 17:52:17,504 Obtendo tags da API Infobip.
+2024-10-11 17:52:17,507 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:52:18,677 https://dm62yg.api.infobip.com:443 "GET /people/2/tags HTTP/1.1" 200 4654
+2024-10-11 17:52:18,717 STREAM b'IHDR' 16 13
+2024-10-11 17:52:18,717 STREAM b'pHYs' 41 9
+2024-10-11 17:52:18,717 STREAM b'iTXt' 62 9639
+2024-10-11 17:52:18,717 STREAM b'IDAT' 9713 39378
+2024-10-11 17:52:18,726 STREAM b'IHDR' 16 13
+2024-10-11 17:52:18,726 STREAM b'pHYs' 41 9
+2024-10-11 17:52:18,726 STREAM b'IDAT' 62 8192
+2024-10-11 17:54:54,558 Aplicação iniciada.
+2024-10-11 17:54:54,687 Obtendo tags da API Infobip.
+2024-10-11 17:54:54,689 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:54:55,985 https://dm62yg.api.infobip.com:443 "GET /people/2/tags HTTP/1.1" 200 4654
+2024-10-11 17:55:03,082 A tag Acelera Corporativo não foi encontrada.
+2024-10-11 17:55:03,110 STREAM b'IHDR' 16 13
+2024-10-11 17:55:03,110 STREAM b'pHYs' 41 9
+2024-10-11 17:55:03,110 STREAM b'iTXt' 62 9639
+2024-10-11 17:55:03,110 STREAM b'IDAT' 9713 39378
+2024-10-11 17:55:03,118 STREAM b'IHDR' 16 13
+2024-10-11 17:55:03,118 STREAM b'pHYs' 41 9
+2024-10-11 17:55:03,118 STREAM b'IDAT' 62 8192
+2024-10-11 17:56:33,968 Aplicação iniciada.
+2024-10-11 17:56:34,097 Obtendo tags da API Infobip.
+2024-10-11 17:56:34,099 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:56:35,308 https://dm62yg.api.infobip.com:443 "GET /people/2/tags HTTP/1.1" 200 4654
+2024-10-11 17:56:35,394 STREAM b'IHDR' 16 13
+2024-10-11 17:56:35,394 STREAM b'pHYs' 41 9
+2024-10-11 17:56:35,394 STREAM b'iTXt' 62 9639
+2024-10-11 17:56:35,395 STREAM b'IDAT' 9713 39378
+2024-10-11 17:56:35,404 STREAM b'IHDR' 16 13
+2024-10-11 17:56:35,404 STREAM b'pHYs' 41 9
+2024-10-11 17:56:35,404 STREAM b'IDAT' 62 8192
+2024-10-11 17:57:32,587 Aplicação iniciada.
+2024-10-11 17:57:32,711 Obtendo tags da API Infobip.
+2024-10-11 17:57:32,714 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:57:33,868 https://dm62yg.api.infobip.com:443 "GET /people/2/tags HTTP/1.1" 200 4654
+2024-10-11 17:57:33,920 STREAM b'IHDR' 16 13
+2024-10-11 17:57:33,920 STREAM b'pHYs' 41 9
+2024-10-11 17:57:33,920 STREAM b'iTXt' 62 9639
+2024-10-11 17:57:33,920 STREAM b'IDAT' 9713 39378
+2024-10-11 17:57:33,928 STREAM b'IHDR' 16 13
+2024-10-11 17:57:33,928 STREAM b'pHYs' 41 9
+2024-10-11 17:57:33,928 STREAM b'IDAT' 62 8192
+2024-10-11 17:57:52,046 Aplicação iniciada.
+2024-10-11 17:57:52,175 Obtendo tags da API Infobip.
+2024-10-11 17:57:52,177 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:57:53,372 https://dm62yg.api.infobip.com:443 "GET /people/2/tags HTTP/1.1" 200 4654
+2024-10-11 17:57:53,450 STREAM b'IHDR' 16 13
+2024-10-11 17:57:53,450 STREAM b'pHYs' 41 9
+2024-10-11 17:57:53,450 STREAM b'iTXt' 62 9639
+2024-10-11 17:57:53,450 STREAM b'IDAT' 9713 39378
+2024-10-11 17:57:53,460 STREAM b'IHDR' 16 13
+2024-10-11 17:57:53,460 STREAM b'pHYs' 41 9
+2024-10-11 17:57:53,460 STREAM b'IDAT' 62 8192
+2024-10-11 17:58:17,090 Iniciando processo de envio de mensagem.
+2024-10-11 17:58:17,090 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:58:17,092 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:58:18,483 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:58:18,485 Técnico: 4 destinatários encontrados.
+2024-10-11 17:58:18,487 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:58:19,700 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:58:19,702 Técnico Emails: 4 encontrados.
+2024-10-11 17:58:19,702 Obtendo números de telefone para as tags: ['Command_Center']
+2024-10-11 17:58:19,704 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:58:20,936 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:58:20,939 Negócios: 4 destinatários encontrados.
+2024-10-11 17:58:20,943 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:58:22,203 https://dm62yg.api.infobip.com:443 "GET /people/2/persons?filter=%7B%22%23and%22%3A+%5B%7B%22%23contains%22%3A+%7B%22tags%22%3A+%22Command_Center%22%7D%7D%5D%7D&limit=1000&pageNumber=0 HTTP/1.1" 200 1518
+2024-10-11 17:58:22,207 Negócios Emails: 4 encontrados.
+2024-10-11 17:58:22,207 Buscando crise com chave: GV-216638
+2024-10-11 17:58:22,210 Starting new HTTPS connection (1): ti-segurosunimed-soa.atlassian.net:443
+2024-10-11 17:58:23,814 https://ti-segurosunimed-soa.atlassian.net:443 "GET /rest/api/3/search?jql=project%3D+Governan%C3%A7a+AND+type+%3D+Crise+AND+key+%3D+GV-216638&maxResults=1 HTTP/1.1" 200 None
+2024-10-11 17:58:23,817 Conexão com Jira bem-sucedida para chave GV-216638.
+2024-10-11 17:58:59,355 Confirmação de envio iniciada.
+2024-10-11 17:58:59,364 Enviando mensagem WhatsApp para 5511962460420.
+2024-10-11 17:58:59,368 Enviando mensagem WhatsApp para 5511988587093.
+2024-10-11 17:58:59,371 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:58:59,376 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:58:59,378 Enviando mensagem WhatsApp para 5511976220522.
+2024-10-11 17:58:59,385 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:58:59,389 Enviando mensagem WhatsApp para 5511958968130.
+2024-10-11 17:58:59,393 Enviando mensagem WhatsApp para 5511962460420.
+2024-10-11 17:58:59,395 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:58:59,400 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:58:59,403 Enviando mensagem WhatsApp para 5511988587093.
+2024-10-11 17:58:59,403 Enviando mensagem WhatsApp para 5511976220522.
+2024-10-11 17:58:59,406 Enviando mensagem WhatsApp para 5511958968130.
+2024-10-11 17:58:59,407 Enviando email para nicolly.mattos.stefanini@segurosunimed.com.br.
+2024-10-11 17:58:59,409 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:58:59,411 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:58:59,412 Enviando email para ruan.santos.stefanini@segurosunimed.com.br.
+2024-10-11 17:58:59,414 Enviando email para renato.rodrigues.stefanini@segurosunimed.com.br.
+2024-10-11 17:58:59,416 Enviando email para lucas.moraes.stefanini@segurosunimed.com.br.
+2024-10-11 17:58:59,416 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:58:59,416 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:58:59,417 Enviando email para nicolly.mattos.stefanini@segurosunimed.com.br.
+2024-10-11 17:58:59,417 Enviando email para ruan.santos.stefanini@segurosunimed.com.br.
+2024-10-11 17:58:59,418 Enviando email para renato.rodrigues.stefanini@segurosunimed.com.br.
+2024-10-11 17:58:59,418 Starting new HTTPS connection (1): api.infobip.com:443
+2024-10-11 17:58:59,419 Enviando email para lucas.moraes.stefanini@segurosunimed.com.br.
+2024-10-11 17:59:01,151 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:59:01,156 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:59:01,178 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:59:01,182 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:59:01,183 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:59:01,187 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:59:01,192 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:59:01,196 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:59:01,205 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:59:01,209 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:59:01,219 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:59:01,224 Starting new HTTPS connection (1): dm62yg.api.infobip.com:443
+2024-10-11 17:59:01,240 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:59:01,295 https://api.infobip.com:443 "POST /whatsapp/1/message/template HTTP/1.1" 200 228
+2024-10-11 17:59:01,889 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:59:01,977 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:59:03,255 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:59:03,273 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:59:03,312 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:59:03,319 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:59:03,322 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:59:03,418 https://dm62yg.api.infobip.com:443 "POST /email/3/send HTTP/1.1" 200 None
+2024-10-11 17:59:03,422 Mensagens e emails enviados com sucesso.

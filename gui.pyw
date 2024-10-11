@@ -5,12 +5,16 @@ from ttkbootstrap.constants import *
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from main import get_crisis_from_key, get_tags, get_numbers_by_tags, get_emails_by_tags, enviar_alerta_whatsapp_com_template, enviar_email_com_template_infobip, escolher_templates, process_issue_data, verificar_placeholders, format_template, format_template_html
 from PIL import Image, ImageTk
+import logging
+import threading
+
+logging.basicConfig(filename='application_logs.json', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
 tema_atual = "flatly"
 def main():
     def create_tag_checkboxes():
         tags = get_tags()
-        tags_to_activate = []
+        tags_to_activate = ["Command_Center", "Governança de TI", "Crises - TIVIT", "Infraestrutura - CSC", "Infraestrutura - TI"]
         for tag in tags:
             var = IntVar()
             if tag in tags_to_activate:
@@ -24,7 +28,7 @@ def main():
         for tag in tags_to_activate:
             var = IntVar()
             var.set(1)
-            checkbox = ttk.Checkbutton(tags_frame_negocios, text=tag, variable=var, state='disabled')
+            checkbox = ttk.Checkbutton(tags_frame_negocios, text=tag, variable=var)
             checkbox.pack(anchor='w')
             tags_vars_negocios[tag] = var
 
@@ -61,13 +65,15 @@ def main():
             tema_atual = "flatly"
 
     def send_message():
+        logging.info("Iniciando processo de envio de mensagem.")
+
         global destinatarios_tecnico, destinatarios_negocios, emails_tecnico, emails_negocios
         
         selected_tags_tecnico = [tag for tag, var in tags_vars_tecnico.items() if var.get() == 1]
         destinatarios_tecnico = get_numbers_by_tags(selected_tags_tecnico)
-        print(f"Técnico:{len(destinatarios_tecnico)}")
+        logging.info(f"Técnico: {len(destinatarios_tecnico)} destinatários encontrados.")
         emails_tecnico = get_emails_by_tags(selected_tags_tecnico)
-        print(f"Técnico Emails:{len(emails_tecnico)}")
+        logging.info(f"Técnico Emails: {len(emails_tecnico)} encontrados.")
 
         if not destinatarios_tecnico:
             messagebox.showerror("Erro", "Nenhum destinatário encontrado para as tags técnicas.")
@@ -75,9 +81,9 @@ def main():
 
         selected_tags_negocios = [tag for tag, var in tags_vars_negocios.items() if var.get() == 1]
         destinatarios_negocios = get_numbers_by_tags(selected_tags_negocios)
-        print(f"Negócios:{len(destinatarios_negocios)}")
+        logging.info(f"Negócios: {len(destinatarios_negocios)} destinatários encontrados.")
         emails_negocios = get_emails_by_tags(selected_tags_negocios)
-        print(f"Negócios Emails:{len(emails_negocios)}")
+        logging.info(f"Negócios Emails: {len(emails_negocios)} encontrados.")
         
         if not destinatarios_negocios:
             messagebox.showerror("Erro", "Nenhum destinatário encontrado para as tags de negócios.")
@@ -127,55 +133,69 @@ def main():
         message_preview_negocios = scrolledtext.ScrolledText(confirmation_window, wrap=ttk.WORD, height=10, width=70)
         message_preview_negocios.pack(pady=10)
 
-        preview_text_tecnico = ""
-        preview_text_negocios = ""
+        def load_preview():
+            preview_text_tecnico = ""
+            preview_text_negocios = ""
 
-        
+            for template_name, _ in templates:
+                formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint)
+                if "tecnico" in template_name:
+                    preview_text_tecnico += formatted_message + "\n\n"
+                if "negocios" in template_name:
+                    preview_text_negocios += formatted_message + "\n\n"
 
-        for template_name, _ in templates:
-            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint)
-            if "tecnico" in template_name:
-                preview_text_tecnico += formatted_message + "\n\n"
-            if "negocios" in template_name:
-                preview_text_negocios += formatted_message + "\n\n"
+            message_preview_tecnico.insert(1.0, preview_text_tecnico)
+            message_preview_negocios.insert(1.0, preview_text_negocios)
 
-        message_preview_tecnico.insert(1.0, preview_text_tecnico)
-        message_preview_negocios.insert(1.0, preview_text_negocios)
+        threading.Thread(target=load_preview).start()
 
         ttk.Button(confirmation_window, text="Confirmar Envio", command=lambda: confirm_send(confirmation_window, templates)).pack(pady=10)
 
     def confirm_send(confirmation_window, templates):
+        logging.info("Confirmação de envio iniciada.")
         confirmation_window.destroy()
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            futures = []
-            for template_name, params in templates:
-                if "tecnico" in template_name:
-                    for destinatario in destinatarios_tecnico:
-                        formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint)
-                        futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params))
-                if "negocios" in template_name:
-                    for destinatario in destinatarios_negocios:
-                        formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado,  issue_checkpoint)
-                        futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params))
 
-            for template_name, params in templates:
-                if "tecnico" in template_name:
-                    for destinatario in emails_tecnico:
-                        formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint))
-                        futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_var.get(), formatted_message_html))
-                if "negocios" in template_name:
-                    for destinatario in emails_negocios:
-                        formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint))
-                        futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_var.get(), formatted_message_html))
+        def send_messages():
+            with ThreadPoolExecutor(max_workers=10) as executor:
+                futures = []
+                
+                for template_name, params in templates:
+                    if "tecnico" in template_name:
+                        for destinatario in destinatarios_tecnico:
+                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint)
+                            futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params))
+                            logging.info(f"Enviando mensagem WhatsApp para {destinatario}.")
+                    if "negocios" in template_name:
+                        for destinatario in destinatarios_negocios:
+                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint)
+                            futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params))
+                            logging.info(f"Enviando mensagem WhatsApp para {destinatario}.")
 
-            for future in as_completed(futures):
-                try:
-                    future.result()
-                except Exception as e:
-                    messagebox.showerror("Erro", f"Erro ao enviar mensagem ou email: {e}")
-                    return
+                for template_name, params in templates:
+                    if "tecnico" in template_name:
+                        for destinatario in emails_tecnico:
+                            formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint))
+                            futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_var.get(), formatted_message_html))
+                            logging.info(f"Enviando email para {destinatario}.")
+                    if "negocios" in template_name:
+                        for destinatario in emails_negocios:
+                            formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint))
+                            futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_var.get(), formatted_message_html))
+                            logging.info(f"Enviando email para {destinatario}.")
 
-        messagebox.showinfo("Sucesso", "Mensagens e emails enviados com sucesso!")
+                for future in as_completed(futures):
+                    try:
+                        future.result()
+                    except Exception as e:
+                        logging.error(f"Erro ao enviar para um destinatário: {e}")
+                        messagebox.showerror("Erro", f"Erro ao enviar mensagem ou email: {e}")
+                        return
+
+            logging.info("Mensagens e emails enviados com sucesso.")
+            messagebox.showinfo("Sucesso", "Mensagens e emails enviados com sucesso!")
+
+        threading.Thread(target=send_messages).start()
+
 
     global status_alerta_var
     root = ttk.Window(themename="flatly")
@@ -273,4 +293,5 @@ def main():
     root.mainloop()
 
 if __name__ == "__main__":
+    logging.info("Aplicação iniciada.")
     main()

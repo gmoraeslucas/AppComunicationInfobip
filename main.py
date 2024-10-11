@@ -5,8 +5,11 @@ import json
 from dotenv import load_dotenv
 import os
 from concurrent.futures import ThreadPoolExecutor
+import logging
 
 load_dotenv()
+
+logging.basicConfig(filename='application_logs.json', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
 API_KEY_INFOBIP = os.getenv('API_KEY_INFOBIP')
 JIRA_SERVER = os.getenv('JIRA_SERVER')
@@ -24,17 +27,18 @@ def get_crisis_from_key(number_key):
         'jql': jql,
         'maxResults': 1
     }
+    logging.info(f"Buscando crise com chave: {number_key}")
     response = requests.get(url, headers=headers, auth=auth, params=params)
     if response.status_code == 200:
         issues = response.json().get('issues', [])
         if issues:
+            logging.info(f"Conexão com Jira bem-sucedida para chave {number_key}.")
             return issues[0]
         else:
-            print("Nenhuma crise encontrada.")
+            logging.error(f"Nenhuma crise encontrada com o código {number_key}")
             return None
     else:
-        print(f"Erro ao acessar o Jira: {response.status_code}")
-        print(f"Detalhes do erro: {response.text}")
+        logging.error(f"Erro ao acessar o Jira: {response.status_code} - {response.text}")
         return None
 
 def extract_text_from_Impacto(Impacto):
@@ -64,14 +68,14 @@ def get_tags():
         'Authorization': f'App {API_KEY_INFOBIP}',
         'Accept': 'application/json'
     }
-
+    logging.info("Obtendo tags da API Infobip.")
     response = requests.get(URL, headers=headers)
 
     if response.status_code == 200:
         tags = response.json()
         return [tag['name'] for tag in tags.get('tags', [])]
     else:
-        print(f'Erro ao obter tags: {response.status_code}')
+        logging.error(f"Erro ao obter tags: {response.status_code} - {response.json()}")
         print(response.json())
         return []
     
@@ -118,8 +122,7 @@ def fetch_contacts_for_tag(tag_name):
             more_results = len(persons) == limit
             page_number += 1
         else:
-            print(f'Erro ao obter contatos para a tag {tag_name}: {response.status_code}')
-            print(response.json())
+            logging.error(f"Erro ao obter contatos para a tag {tag_name}: {response.status_code} - {response.json()}")
             more_results = False
 
     return contacts
@@ -127,21 +130,18 @@ def fetch_contacts_for_tag(tag_name):
 def get_numbers_by_tags(tag_names):
     all_contacts = []
 
-    # Usar ThreadPoolExecutor para executar chamadas simultâneas
+    logging.info(f"Obtendo números de telefone para as tags: {tag_names}")
     with ThreadPoolExecutor(max_workers=5) as executor:
-        # Mapeie as tags para a função fetch_contacts_for_tag
         futures = {executor.submit(fetch_contacts_for_tag, tag_name): tag_name for tag_name in tag_names}
         
-        # Processar os resultados conforme eles são completados
         for future in futures:
             try:
                 contacts = future.result()
                 all_contacts.extend(contacts)
             except Exception as exc:
                 tag_name = futures[future]
-                print(f'Erro ao processar a tag {tag_name}: {exc}')
+                logging.error(f"Erro ao processar a tag {tag_name}: {exc}")
 
-    # Remover duplicatas, caso existam
     return list(set(all_contacts))
 
 def fetch_emails_for_tag(tag_name):
@@ -193,12 +193,9 @@ def fetch_emails_for_tag(tag_name):
 def get_emails_by_tags(tag_names):
     all_emails = []
 
-    # Usar ThreadPoolExecutor para executar chamadas simultâneas
     with ThreadPoolExecutor(max_workers=5) as executor:
-        # Mapeie as tags para a função fetch_emails_for_tag
         futures = {executor.submit(fetch_emails_for_tag, tag_name): tag_name for tag_name in tag_names}
         
-        # Processar os resultados conforme eles são completados
         for future in futures:
             try:
                 emails = future.result()
@@ -207,7 +204,6 @@ def get_emails_by_tags(tag_names):
                 tag_name = futures[future]
                 print(f'Erro ao processar a tag {tag_name}: {exc}')
 
-    # Remover duplicatas, caso existam
     return list(set(all_emails))
 
 def enviar_alerta_whatsapp_com_template(destinatario, template_name, parametros, language_code='pt_BR'):
