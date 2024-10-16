@@ -57,12 +57,34 @@ def main():
     
     def choose_theme():
         global tema_atual
+<<<<<<< Updated upstream
         if tema_atual == "flatly":
             root.style.theme_use("darkly")
             tema_atual = "darkly"
         else:
             root.style.theme_use("flatly")
             tema_atual = "flatly"
+=======
+        available_themes = root.style.theme_names() 
+        
+        theme_cycle = ["cosmo", "flatly", "default"]  
+
+        if tema_atual in theme_cycle:
+            current_index = theme_cycle.index(tema_atual)
+            next_index = (current_index + 1) % len(theme_cycle)
+            new_theme = theme_cycle[next_index]
+        else:
+            new_theme = "default"  # If the current theme isn't recognized, set to default
+
+        if new_theme in available_themes:
+            root.style.theme_use(new_theme)
+            tema_atual = new_theme
+        else:
+            root.style.theme_use("default")
+            tema_atual = "default"
+
+        print(f"Theme changed to: {tema_atual}")
+>>>>>>> Stashed changes
 
     def send_message():
 
@@ -195,7 +217,11 @@ def main():
 
 
     global status_alerta_var
+<<<<<<< Updated upstream
     root = ttk.Window(themename="flatly")
+=======
+    root = ttk.Window(themename="cosmo")
+>>>>>>> Stashed changes
     root.title("Envio de Alertas")
     window_width = 730
     window_height = 960
