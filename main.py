@@ -130,7 +130,7 @@ def get_numbers_by_tags(tag_names):
     all_contacts = []
 
     logging.info(f"Obtendo números de telefone para as tags: {tag_names}")
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    with ThreadPoolExecutor(max_workers=5) as executor: #Não alterar o "max_workers=5", pois a API de GET persons só aceita 5 requisições por segundo
         futures = {executor.submit(fetch_contacts_for_tag, tag_name): tag_name for tag_name in tag_names}
         
         for future in futures:
@@ -191,7 +191,7 @@ def fetch_emails_for_tag(tag_name):
 def get_emails_by_tags(tag_names):
     all_emails = []
 
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    with ThreadPoolExecutor(max_workers=5) as executor: #Não alterar o "max_workers=5", pois a API de GET persons só aceita 5 requisições por segundo
         futures = {executor.submit(fetch_emails_for_tag, tag_name): tag_name for tag_name in tag_names}
         
         for future in futures:
