@@ -10,7 +10,7 @@ import threading
 
 logging.basicConfig(filename='application_logs.json', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
-tema_atual = "flatly"
+tema_atual = "capuccino"
 def main():
     def create_tag_checkboxes():
         tags = get_tags()
@@ -57,12 +57,25 @@ def main():
     
     def choose_theme():
         global tema_atual
-        if tema_atual == "flatly":
+        available_themes = root.style.theme_names() 
+        
+        theme_cycle = ["cosmo", "flatly", "darkly"]  
+
+        if tema_atual in theme_cycle:
+            current_index = theme_cycle.index(tema_atual)
+            next_index = (current_index + 1) % len(theme_cycle)
+            new_theme = theme_cycle[next_index]
+        else:
+            new_theme = "darkly"  # If the current theme isn't recognized, set to darkly
+
+        if new_theme in available_themes:
+            root.style.theme_use(new_theme)
+            tema_atual = new_theme
+        else:
             root.style.theme_use("darkly")
             tema_atual = "darkly"
-        else:
-            root.style.theme_use("flatly")
-            tema_atual = "flatly"
+
+        print(f"Theme changed to: {tema_atual}")
 
     def send_message():
 
