@@ -230,14 +230,15 @@ def enviar_alerta_whatsapp_com_template(destinatario, template_name, parametros,
         ]
     }
 
-    response = requests.post(URL, headers=headers, data=json.dumps(payload))
+    try:
+        response = requests.post(URL, headers=headers, data=json.dumps(payload))
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        error_message = f"Erro ao enviar mensagem para {destinatario}: {e}"
+        logging.error(error_message)
+        raise Exception(error_message)
 
-    if response.status_code == 200:
-        logging.info(f'Mensagem enviada com sucesso para {destinatario}!')
-    else:
-        logging.error(f'Falha ao enviar a mensagem para {destinatario}. Status code: {response.status_code}. Detalhes da resposta: {response.json()}')
-
-import requests
+    logging.info(f'Mensagem enviada com sucesso para {destinatario}!')
 
 def enviar_email_com_template_infobip(destinatario, assunto, corpo_email_html):
     base_url = 'dm62yg.api.infobip.com'
@@ -271,13 +272,15 @@ def enviar_email_com_template_infobip(destinatario, assunto, corpo_email_html):
             'html': html_content,
         }
 
-        response = requests.post(url, headers=headers, data=data, files=files)
+        try:
+            response = requests.post(url, headers=headers, data=data, files=files)
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            error_message = f"Erro ao enviar email para {destinatario}: {e}"
+            logging.error(error_message)
+            raise Exception(error_message)
 
-
-    if response.status_code == 200:
-        logging.info(f'Email enviado com sucesso para {destinatario}!')
-    else:
-        logging.error(f'Falha ao enviar email para {destinatario}. Status code: {response.status_code}. Detalhes da resposta: {response.json()}')
+    logging.info(f'Email enviado com sucesso para {destinatario}!')
 
 def escolher_templates(tipo_alerta, status, issue_checkpoint, issue_impacto_normalizado):
     templates_crise = {
