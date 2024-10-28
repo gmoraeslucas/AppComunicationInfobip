@@ -3,7 +3,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.scrolled import ScrolledFrame
 from ttkbootstrap.constants import *
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from main import get_crisis_from_key, get_tags, get_numbers_by_tags, get_emails_by_tags, enviar_alerta_whatsapp_com_template, enviar_email_com_template_infobip, escolher_templates, process_issue_data, verificar_placeholders, format_template, format_template_html
+from main import get_jira_from_key, get_tags, get_numbers_by_tags, get_emails_by_tags, enviar_alerta_whatsapp_com_template, enviar_email_com_template_infobip, escolher_templates, process_issue_data, verificar_placeholders, format_template, format_template_html, process_issue_data_gmud
 from PIL import Image, ImageTk
 import logging
 import threading
@@ -107,26 +107,31 @@ def main():
         status_alerta = status_alerta_var.get().lower()
         
         number_key = number_key_entry.get()
-        issue_data = get_crisis_from_key(number_key)
+        issue_data = get_jira_from_key(number_key)
 
-        Prioridade = issue_data['fields'].get('customfield_10371', {})
+        Prioridade = issue_data['fields'].get('customfield_10371', None)
         issue_prioridade = Prioridade.get('value', 'Não especificado')
 
         if issue_prioridade == "P1" or issue_prioridade == "P0":
             tipo_alerta = "crise"
             tipo_alerta_email = "Crise"
-        else:
+        elif issue_prioridade == "P2" or issue_prioridade == "P3":
             tipo_alerta = "inc. crítico"
             tipo_alerta_email = "Inc. Crítico"
 
         if issue_data:
             global issue_checkpoint
             global issue_impacto_normalizado
-            process_issue_data(issue_data)
+            if tipo_alerta_var == "Crise":
+                process_issue_data(issue_data)
+            elif tipo_alerta_var == "GMUD":
+                process_issue_data_gmud(issue_data)
             issue_checkpoint = checkpoint_date_entry.get()
             issue_impacto_normalizado = impacto_normalizado_entry.get()
+            issue_atividade = atividade_entry.get()
+            issue_meet_gmud = meet_gmud_entry.get()
 
-            templates = escolher_templates(tipo_alerta, status_alerta, issue_checkpoint, issue_impacto_normalizado)
+            templates = escolher_templates(tipo_alerta_var, tipo_alerta, status_alerta, issue_checkpoint, issue_impacto_normalizado, issue_atividade, issue_meet_gmud)
             if templates:
                 if not verificar_placeholders(templates):
                     messagebox.showerror("Erro", "Um ou mais placeholders estão vazios.")
@@ -232,9 +237,6 @@ def main():
     tags_vars_tecnico = {}
     tags_vars_negocios = {}
 
-    
-
-
     scrolled_frame = ScrolledFrame(root, width=window_width, height=window_height, autohide=True)
     scrolled_frame.pack(pady=10, padx=10, fill='both', expand=True)
 
@@ -248,10 +250,18 @@ def main():
         impacto_normalizado_entry.pack_forget()
         if tipo_alerta_var.get() == "Crise":
             status_gmud_frame.pack_forget()
+            atividade_label.pack_forget()
+            atividade_entry.pack_forget()
+            meet_gmud_label.pack_forget()
+            meet_gmud_entry.pack_forget()
             status_alerta_frame.pack(pady=10, after=tipo_alerta_frame)
         elif tipo_alerta_var.get() == "GMUD":
             status_alerta_frame.pack_forget()
             status_gmud_frame.pack(pady=10, after=tipo_alerta_frame)
+            atividade_label.pack(pady=10, after=number_key_entry)
+            atividade_entry.pack(pady=10, after=atividade_label)
+            meet_gmud_label.pack(pady=10, after=number_key_entry)
+            meet_gmud_entry.pack(pady=10, after=meet_gmud_label)
 
     tipo_alerta_frame = ttk.Frame(border_frame)
     tipo_alerta_frame.pack(pady=10)
@@ -271,15 +281,18 @@ def main():
     
     status_gmud_frame = ttk.Frame(border_frame)
     status_gmud_frame.pack(pady=10)
-    ttk.Radiobutton(status_gmud_frame, text="Programada", variable=status_alerta_var, value="Programada", command=toggle_checkpoint_date).pack(side='left', padx=5)
-    ttk.Radiobutton(status_gmud_frame, text="Emergencial", variable=status_alerta_var, value="Emergencial", command=toggle_checkpoint_date).pack(side='left', padx=5)
-    ttk.Radiobutton(status_gmud_frame, text="Pré-Aprovada", variable=status_alerta_var, value="Pré-Aprovada", command=toggle_checkpoint_date).pack(side='left', padx=5)
     
     checkpoint_date_label = ttk.Label(border_frame, text="Data do Checkpoint:", font=("Arial", 10))
     checkpoint_date_entry = ttk.Entry(border_frame, font=("Arial", 10))
 
     impacto_normalizado_label = ttk.Label(border_frame, text="Mensagem de normalização:", font=("Arial", 10))
     impacto_normalizado_entry = ttk.Entry(border_frame, font=("Arial", 10))
+
+    atividade_label = ttk.Label(border_frame, text="Atividade:", font=("Arial", 10))
+    atividade_entry = ttk.Entry(border_frame, font=("Arial", 10))
+
+    meet_gmud_label = ttk.Label(border_frame, text="Link do Meet:", font=("Arial", 10))
+    meet_gmud_entry = ttk.Entry(border_frame, font=("Arial", 10))
 
     toggle_fields()
 

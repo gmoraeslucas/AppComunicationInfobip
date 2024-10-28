@@ -16,8 +16,8 @@ JIRA_SERVER = os.getenv('JIRA_SERVER')
 JIRA_USER = os.getenv('JIRA_USER')
 JIRA_API_TOKEN = os.getenv('JIRA_API_TOKEN')
 
-def get_crisis_from_key(number_key):
-    jql = f"project= Governança AND type = Crise AND key = {number_key}"
+def get_jira_from_key(number_key):
+    jql = f"key = {number_key}"
     url = f"{JIRA_SERVER}/rest/api/3/search"
     auth = HTTPBasicAuth(JIRA_USER, JIRA_API_TOKEN)
     headers = {
@@ -282,7 +282,7 @@ def enviar_email_com_template_infobip(destinatario, assunto, corpo_email_html):
 
     logging.info(f'Email enviado com sucesso para {destinatario}!')
 
-def escolher_templates(tipo_alerta, status, issue_checkpoint, issue_impacto_normalizado):
+def escolher_templates(tipo_alerta_var, tipo_alerta, status, issue_checkpoint, issue_impacto_normalizado, issue_atividade, issue_meet_gmud):
     templates_crise = {
         'início': [
             ('inicio_crise_negocios', [issue_sistema, 'Início', issue_impacto, issue_inicio]),
@@ -321,10 +321,19 @@ def escolher_templates(tipo_alerta, status, issue_checkpoint, issue_impacto_norm
         ]
     }
 
+    templates_gmud = {
+        'gmud': [
+            ('gmud_negocio_v2', [issue_sistema, issue_tipo, "Produção", issue_atividade, issue_inicio, issue_termino]),
+            ('gmud_tecnico_v4', [issue_sistema, issue_tipo, issue_ticket, "Produção", issue_atividade, issue_meet_gmud, issue_inicio, issue_termino])
+        ]
+    }
+
     if tipo_alerta == 'crise':
         return templates_crise.get(status.lower(), [])
     elif tipo_alerta == 'inc. crítico':
         return templates_critico.get(status.lower(), [])
+    elif tipo_alerta_var == "GMUD":
+        return templates_gmud.get("gmud", [])
     else:
         return []
 
@@ -375,6 +384,30 @@ def process_issue_data(issue_data):
         'inicio': issue_inicio,
         'termino': issue_termino,
         'meet': issue_meet,
+    }
+
+def process_issue_data_gmud(issue_data):
+    global issue_ticket, issue_sistema, issue_tipo, issue_inicio, issue_termino
+    
+    issue_ticket = issue_data['key']
+
+    Sistema = issue_data['fields'].get('customfield_10273', {})
+    issue_sistema = Sistema.get('value', 'Não especificado')
+
+    Tipo = issue_data['fields'].get('customfield_10010', {})
+    issue_tipo = Tipo.get('value', 'Não especificado')
+
+    Inicio = issue_data['fields'].get('customfield_10774', None)
+    issue_inicio = format_date(Inicio)
+
+    Termino = issue_data['fields'].get('customfield_10775', None)
+    issue_termino = format_date(Termino) if Termino else ""
+
+    return {
+        'ticket': issue_ticket,
+        'sistema': issue_sistema,
+        'inicio': issue_inicio,
+        'termino': issue_termino
     }
 
 def load_templates():
