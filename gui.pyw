@@ -54,7 +54,6 @@ def main():
             impacto_normalizado_label.pack_forget()
             impacto_normalizado_entry.pack_forget()
 
-    
     def choose_theme():
         global tema_atual
         available_themes = root.style.theme_names() 
@@ -79,7 +78,7 @@ def main():
 
     def send_message():
 
-        global destinatarios_tecnico, destinatarios_negocios, emails_tecnico, emails_negocios
+        global destinatarios_tecnico, destinatarios_negocios, emails_tecnico, emails_negocios, tipo_alerta_email
         
         selected_tags_tecnico = [tag for tag, var in tags_vars_tecnico.items() if var.get() == 1]
         destinatarios_tecnico = get_numbers_by_tags(selected_tags_tecnico)
@@ -100,13 +99,26 @@ def main():
         if not destinatarios_negocios:
             messagebox.showerror("Erro", "Nenhum destinatário encontrado para as tags de negócios.")
             return
-            
-        tipo_alerta = tipo_alerta_var.get().lower()
+        
+
+        
+        tipo_alerta = ""
+        tipo_alerta_email = ""
         status_alerta = status_alerta_var.get().lower()
         
         number_key = number_key_entry.get()
         issue_data = get_crisis_from_key(number_key)
-        
+
+        Prioridade = issue_data['fields'].get('customfield_10371', {})
+        issue_prioridade = Prioridade.get('value', 'Não especificado')
+
+        if issue_prioridade == "P1" or issue_prioridade == "P0":
+            tipo_alerta = "crise"
+            tipo_alerta_email = "Crise"
+        else:
+            tipo_alerta = "inc. crítico"
+            tipo_alerta_email = "Inc. Crítico"
+
         if issue_data:
             global issue_checkpoint
             global issue_impacto_normalizado
@@ -185,12 +197,12 @@ def main():
                     if "tecnico" in template_name:
                         for destinatario in emails_tecnico:
                             formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint))
-                            futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_var.get(), formatted_message_html))
+                            futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_email, formatted_message_html))
                             logging.info(f"Enviando email para {destinatario}.")
                     if "negocios" in template_name:
                         for destinatario in emails_negocios:
                             formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint))
-                            futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_var.get(), formatted_message_html))
+                            futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_email, formatted_message_html))
                             logging.info(f"Enviando email para {destinatario}.")
 
                 for future in as_completed(futures):
@@ -207,7 +219,7 @@ def main():
         threading.Thread(target=send_messages).start()
 
 
-    global status_alerta_var
+    global status_alerta_var, tipo_alerta_var
     root = ttk.Window(themename="flatly")
     root.title("Envio de Alertas")
     window_width = 730
@@ -220,17 +232,33 @@ def main():
     tags_vars_tecnico = {}
     tags_vars_negocios = {}
 
+    
+
+
     scrolled_frame = ScrolledFrame(root, width=window_width, height=window_height, autohide=True)
     scrolled_frame.pack(pady=10, padx=10, fill='both', expand=True)
 
     border_frame = ttk.Labelframe(scrolled_frame, text="Envio de Comunicação de Crise", padding=(10, 10, 5, 10))
     border_frame.pack(pady=10, padx=10, fill='both', expand=True)
 
+    def toggle_fields():
+        checkpoint_date_label.pack_forget()
+        checkpoint_date_entry.pack_forget()
+        impacto_normalizado_label.pack_forget()
+        impacto_normalizado_entry.pack_forget()
+        if tipo_alerta_var.get() == "Crise":
+            status_gmud_frame.pack_forget()
+            status_alerta_frame.pack(pady=10, after=tipo_alerta_frame)
+        elif tipo_alerta_var.get() == "GMUD":
+            status_alerta_frame.pack_forget()
+            status_gmud_frame.pack(pady=10, after=tipo_alerta_frame)
+
     tipo_alerta_frame = ttk.Frame(border_frame)
     tipo_alerta_frame.pack(pady=10)
-    tipo_alerta_var = ttk.StringVar()
-    ttk.Radiobutton(tipo_alerta_frame, text="Crise", variable=tipo_alerta_var, value="Crise").pack(side='left', padx=5)
-    ttk.Radiobutton(tipo_alerta_frame, text="Inc. Crítico", variable=tipo_alerta_var, value="Inc. Crítico").pack(side='left', padx=5)
+    tipo_alerta_var = ttk.StringVar(value="Crise")
+    ttk.Radiobutton(tipo_alerta_frame, text="Crise", variable=tipo_alerta_var, value="Crise", command=toggle_fields).pack(side='left', padx=5)
+    ttk.Radiobutton(tipo_alerta_frame, text="GMUD", variable=tipo_alerta_var, value="GMUD", command=toggle_fields).pack(side='left', padx=5)
+
 
     ttk.Label(border_frame, text="Status:", font=("Arial", 10)).pack(pady=10)
     status_alerta_frame = ttk.Frame(border_frame)
@@ -240,12 +268,20 @@ def main():
     ttk.Radiobutton(status_alerta_frame, text="Equipes seguem atuando", variable=status_alerta_var, value="Equipes seguem atuando", command=toggle_checkpoint_date).pack(side='left', padx=5)
     ttk.Radiobutton(status_alerta_frame, text="Em validação", variable=status_alerta_var, value="Em validação", command=toggle_checkpoint_date).pack(side='left', padx=5)
     ttk.Radiobutton(status_alerta_frame, text="Normalizado", variable=status_alerta_var, value="Normalizado", command=toggle_checkpoint_date).pack(side='left', padx=5)
-
+    
+    status_gmud_frame = ttk.Frame(border_frame)
+    status_gmud_frame.pack(pady=10)
+    ttk.Radiobutton(status_gmud_frame, text="Programada", variable=status_alerta_var, value="Programada", command=toggle_checkpoint_date).pack(side='left', padx=5)
+    ttk.Radiobutton(status_gmud_frame, text="Emergencial", variable=status_alerta_var, value="Emergencial", command=toggle_checkpoint_date).pack(side='left', padx=5)
+    ttk.Radiobutton(status_gmud_frame, text="Pré-Aprovada", variable=status_alerta_var, value="Pré-Aprovada", command=toggle_checkpoint_date).pack(side='left', padx=5)
+    
     checkpoint_date_label = ttk.Label(border_frame, text="Data do Checkpoint:", font=("Arial", 10))
     checkpoint_date_entry = ttk.Entry(border_frame, font=("Arial", 10))
 
     impacto_normalizado_label = ttk.Label(border_frame, text="Mensagem de normalização:", font=("Arial", 10))
     impacto_normalizado_entry = ttk.Entry(border_frame, font=("Arial", 10))
+
+    toggle_fields()
 
     number_key_label = ttk.Label(border_frame, text="Número da GV:", font=("Helvetica", 10))
     number_key_label.pack(pady=10)
