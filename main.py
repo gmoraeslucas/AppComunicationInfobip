@@ -282,7 +282,8 @@ def enviar_email_com_template_infobip(destinatario, assunto, corpo_email_html):
 
     logging.info(f'Email enviado com sucesso para {destinatario}!')
 
-def escolher_templates(tipo_alerta_var, tipo_alerta, status, issue_checkpoint, issue_impacto_normalizado, issue_atividade, issue_meet_gmud):
+def escolher_templates(tipo_alerta, status, issue_checkpoint, issue_impacto_normalizado):
+
     templates_crise = {
         'início': [
             ('inicio_crise_negocios', [issue_sistema, 'Início', issue_impacto, issue_inicio]),
@@ -321,18 +322,21 @@ def escolher_templates(tipo_alerta_var, tipo_alerta, status, issue_checkpoint, i
         ]
     }
 
-    templates_gmud = {
-        'gmud': [
-            ('gmud_negocio_v2', [issue_sistema, issue_tipo, "Produção", issue_atividade, issue_inicio, issue_termino]),
-            ('gmud_tecnico_v4', [issue_sistema, issue_tipo, issue_ticket, "Produção", issue_atividade, issue_meet_gmud, issue_inicio, issue_termino])
-        ]
-    }
-
     if tipo_alerta == 'crise':
         return templates_crise.get(status.lower(), [])
     elif tipo_alerta == 'inc. crítico':
         return templates_critico.get(status.lower(), [])
-    elif tipo_alerta_var == "GMUD":
+    else:
+        return []
+    
+def escolher_templates_gmud(tipo_alerta_var, issue_atividade, issue_meet_gmud):
+    templates_gmud = {
+        'gmud': [
+            ('gmud_negocio_v2', [issue_sistema, issue_tipo, issue_ambiente, issue_atividade, issue_inicio, issue_termino]),
+            ('gmud_tecnico_v4', [issue_sistema, issue_tipo, issue_ticket, issue_ambiente, issue_atividade, issue_meet_gmud, issue_inicio, issue_termino])
+        ]
+    }
+    if tipo_alerta_var == "GMUD":
         return templates_gmud.get("gmud", [])
     else:
         return []
@@ -387,19 +391,21 @@ def process_issue_data(issue_data):
     }
 
 def process_issue_data_gmud(issue_data):
-    global issue_ticket, issue_sistema, issue_tipo, issue_inicio, issue_termino
+    global issue_ticket, issue_sistema, issue_tipo, issue_inicio, issue_termino, issue_ambiente
     
     issue_ticket = issue_data['key']
-
+    
     Sistema = issue_data['fields'].get('customfield_10273', {})
     issue_sistema = Sistema.get('value', 'Não especificado')
+    
+    issue_ambiente = "Produção"
 
     Tipo = issue_data['fields'].get('customfield_10010', {})
-    issue_tipo = Tipo.get('value', 'Não especificado')
-
+    issue_tipo = Tipo.get('requestType', {}).get('name', 'Não especificado')
+    
     Inicio = issue_data['fields'].get('customfield_10774', None)
     issue_inicio = format_date(Inicio)
-
+    
     Termino = issue_data['fields'].get('customfield_10775', None)
     issue_termino = format_date(Termino) if Termino else ""
 
@@ -408,7 +414,7 @@ def process_issue_data_gmud(issue_data):
         'sistema': issue_sistema,
         'inicio': issue_inicio,
         'termino': issue_termino
-    }
+    }, issue_tipo
 
 def load_templates():
     with open('templates.json', 'r', encoding='utf-8') as file:
@@ -416,7 +422,7 @@ def load_templates():
 
 TEMPLATES = load_templates()
 
-def format_template(template_name, issue_status, issue_impacto_normalizado, issue_checkpoint):
+def format_template(template_name, issue_status, issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var, issue_atividade, issue_meet_gmud):
     template = TEMPLATES.get(template_name, "")
     if template:
         if (issue_status == "Normalizado" or issue_status == "Em validação"):
@@ -443,9 +449,19 @@ def format_template(template_name, issue_status, issue_impacto_normalizado, issu
                 issue_checkpoint=issue_checkpoint,
                 issue_termino=issue_termino
             )
+        elif (tipo_alerta_var == "GMUD"):
+            formatted_text = template.format(
+                issue_sistema=issue_sistema,
+                issue_tipo=issue_tipo,
+                issue_ticket=issue_ticket,
+                issue_ambiente=issue_ambiente,
+                issue_atividade=issue_atividade,
+                issue_meet_gmud=issue_meet_gmud,
+                issue_inicio=issue_inicio,
+                issue_termino=issue_termino
+            )
         else:
             formatted_text = ""
-
         return formatted_text
     return ""
 
