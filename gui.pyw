@@ -3,14 +3,15 @@ import ttkbootstrap as ttk
 from ttkbootstrap.scrolled import ScrolledFrame
 from ttkbootstrap.constants import *
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from main import get_crisis_from_key, get_tags, get_numbers_by_tags, get_emails_by_tags, enviar_alerta_whatsapp_com_template, enviar_email_com_template_infobip, escolher_templates, process_issue_data, verificar_placeholders, format_template, format_template_html
+from main import escolher_templates_gmud, get_jira_from_key, get_tags, get_numbers_by_tags, get_emails_by_tags, enviar_alerta_whatsapp_com_template, enviar_email_com_template_infobip, escolher_templates, process_issue_data, verificar_placeholders, format_template, format_template_html, process_issue_data_gmud
 from PIL import Image, ImageTk
 import logging
 import threading
+import json
 
 logging.basicConfig(filename='application_logs.json', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
-tema_atual = "capuccino"
+tema_atual = "simplex"
 def main():
     def create_tag_checkboxes():
         tags = get_tags()
@@ -54,32 +55,28 @@ def main():
             impacto_normalizado_label.pack_forget()
             impacto_normalizado_entry.pack_forget()
 
-    
     def choose_theme():
         global tema_atual
-        available_themes = root.style.theme_names() 
+        available_themes = root.style.theme_names()
         
-        theme_cycle = ["cosmo", "flatly", "darkly"]  
-
+        theme_cycle = ["simplex", "solar", "darkly"]
+        
         if tema_atual in theme_cycle:
             current_index = theme_cycle.index(tema_atual)
             next_index = (current_index + 1) % len(theme_cycle)
             new_theme = theme_cycle[next_index]
         else:
-            new_theme = "darkly"  # If the current theme isn't recognized, set to darkly
+            new_theme = "simplex"  # Se o tema atual não for reconhecido, será iniciado como "simplex"
 
         if new_theme in available_themes:
             root.style.theme_use(new_theme)
             tema_atual = new_theme
-        else:
-            root.style.theme_use("darkly")
-            tema_atual = "darkly"
 
-        print(f"Theme changed to: {tema_atual}")
+        logging.info(f"Theme changed to: {tema_atual}")
 
     def send_message():
 
-        global destinatarios_tecnico, destinatarios_negocios, emails_tecnico, emails_negocios
+        global destinatarios_tecnico, destinatarios_negocios, emails_tecnico, emails_negocios, tipo_alerta_email
         
         selected_tags_tecnico = [tag for tag, var in tags_vars_tecnico.items() if var.get() == 1]
         destinatarios_tecnico = get_numbers_by_tags(selected_tags_tecnico)
@@ -100,21 +97,49 @@ def main():
         if not destinatarios_negocios:
             messagebox.showerror("Erro", "Nenhum destinatário encontrado para as tags de negócios.")
             return
-            
-        tipo_alerta = tipo_alerta_var.get().lower()
+        
+        tipo_alerta = ""
+        tipo_alerta_email = ""
         status_alerta = status_alerta_var.get().lower()
         
         number_key = number_key_entry.get()
-        issue_data = get_crisis_from_key(number_key)
-        
+        issue_data = get_jira_from_key(number_key)
+            
         if issue_data:
             global issue_checkpoint
             global issue_impacto_normalizado
-            process_issue_data(issue_data)
+            global issue_atividade
+            global issue_meet_gmud
+            if tipo_alerta_var.get() == "Crise":
+                process_issue_data(issue_data)
+                Prioridade = issue_data['fields'].get('customfield_10371', {})
+                issue_prioridade = Prioridade.get('value', 'Não especificado')
+
+                if issue_prioridade == "P1" or issue_prioridade == "P0":
+                    tipo_alerta = "crise"
+                    tipo_alerta_email = "Crise"
+
+                elif issue_prioridade == "P2" or issue_prioridade == "P3":
+                    tipo_alerta = "inc. crítico"
+                    tipo_alerta_email = "Inc. Crítico"
+
+            elif tipo_alerta_var.get() == "GMUD":
+                Tipo = issue_data['fields'].get('customfield_10010', {})
+                issue_tipo = Tipo.get('requestType', {}).get('name', 'Não especificado')
+                process_issue_data_gmud(issue_data)
+                tipo_alerta_email = f"Mudança {issue_tipo}"
+                
             issue_checkpoint = checkpoint_date_entry.get()
             issue_impacto_normalizado = impacto_normalizado_entry.get()
+            issue_atividade = atividade_entry.get()
+            issue_meet_gmud = meet_gmud_entry.get()
+            
 
-            templates = escolher_templates(tipo_alerta, status_alerta, issue_checkpoint, issue_impacto_normalizado)
+            if tipo_alerta_var.get() == "Crise":
+                templates = escolher_templates(tipo_alerta, status_alerta, issue_checkpoint, issue_impacto_normalizado)
+            elif tipo_alerta_var.get() == "GMUD":
+                templates = escolher_templates_gmud(tipo_alerta_var.get(), issue_atividade, issue_meet_gmud)
+
             if templates:
                 if not verificar_placeholders(templates):
                     messagebox.showerror("Erro", "Um ou mais placeholders estão vazios.")
@@ -138,25 +163,51 @@ def main():
 
         ttk.Label(confirmation_window, text="Confirme as Mensagens a Serem Enviadas:", font=("Arial", 10)).pack(pady=10)
 
-        message_preview_tecnico = scrolledtext.ScrolledText(confirmation_window, wrap=ttk.WORD, height=10, width=70)
-        message_preview_tecnico.pack(pady=10)
+        message_preview_tecnico = None
+        message_preview_negocios = None
+        message_preview_gmud_tecnico = None
+        message_preview_gmud_negocio = None
 
-        message_preview_negocios = scrolledtext.ScrolledText(confirmation_window, wrap=ttk.WORD, height=10, width=70)
-        message_preview_negocios.pack(pady=10)
+
+        if tipo_alerta_var.get() == "Crise":
+            message_preview_tecnico = scrolledtext.ScrolledText(confirmation_window, wrap=ttk.WORD, height=10, width=70)
+            message_preview_tecnico.pack(pady=10)
+        
+            message_preview_negocios = scrolledtext.ScrolledText(confirmation_window, wrap=ttk.WORD, height=10, width=70)
+            message_preview_negocios.pack(pady=10)
+
+        elif tipo_alerta_var.get() == "GMUD":
+            message_preview_gmud_tecnico = scrolledtext.ScrolledText(confirmation_window, wrap=ttk.WORD, height=10, width=70)
+            message_preview_gmud_tecnico.pack(pady=10)
+
+            message_preview_gmud_negocio = scrolledtext.ScrolledText(confirmation_window, wrap=ttk.WORD, height=10, width=70)
+            message_preview_gmud_negocio.pack(pady=10)
 
         def load_preview():
             preview_text_tecnico = ""
             preview_text_negocios = ""
+            preview_text_gmud_tecnico = ""
+            preview_text_gmud_negocio = ""
 
             for template_name, _ in templates:
-                formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint)
+                formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade, issue_meet_gmud)
                 if "tecnico" in template_name:
                     preview_text_tecnico += formatted_message + "\n\n"
                 if "negocios" in template_name:
                     preview_text_negocios += formatted_message + "\n\n"
+                if "gmud_tecnico" in template_name:
+                    preview_text_gmud_tecnico += formatted_message + "\n\n"
+                if "gmud_negocio" in template_name:
+                    preview_text_gmud_negocio += formatted_message + "\n\n"
 
-            message_preview_tecnico.insert(1.0, preview_text_tecnico)
-            message_preview_negocios.insert(1.0, preview_text_negocios)
+            if message_preview_tecnico is not None:
+                message_preview_tecnico.insert(1.0, preview_text_tecnico)
+            if message_preview_negocios is not None:
+                message_preview_negocios.insert(1.0, preview_text_negocios)
+            if message_preview_gmud_tecnico is not None:
+                message_preview_gmud_tecnico.insert(1.0, preview_text_gmud_tecnico)
+            if message_preview_gmud_negocio is not None:
+                message_preview_gmud_negocio.insert(1.0, preview_text_gmud_negocio)
 
         threading.Thread(target=load_preview).start()
 
@@ -170,27 +221,28 @@ def main():
                 futures = []
                 
                 for template_name, params in templates:
+                    
                     if "tecnico" in template_name:
                         for destinatario in destinatarios_tecnico:
-                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint)
+                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade, issue_meet_gmud)
                             futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params))
                             logging.info(f"Enviando mensagem WhatsApp para {destinatario}.")
-                    if "negocios" in template_name:
+                    if "negocio" in template_name:
                         for destinatario in destinatarios_negocios:
-                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint)
+                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade, issue_meet_gmud)
                             futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params))
                             logging.info(f"Enviando mensagem WhatsApp para {destinatario}.")
 
                 for template_name, params in templates:
                     if "tecnico" in template_name:
                         for destinatario in emails_tecnico:
-                            formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint))
-                            futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_var.get(), formatted_message_html))
+                            formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade, issue_meet_gmud))
+                            futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_email, formatted_message_html))
                             logging.info(f"Enviando email para {destinatario}.")
-                    if "negocios" in template_name:
+                    if "negocio" in template_name:
                         for destinatario in emails_negocios:
-                            formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint))
-                            futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_var.get(), formatted_message_html))
+                            formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade, issue_meet_gmud))
+                            futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_email, formatted_message_html))
                             logging.info(f"Enviando email para {destinatario}.")
 
                 for future in as_completed(futures):
@@ -207,8 +259,8 @@ def main():
         threading.Thread(target=send_messages).start()
 
 
-    global status_alerta_var
-    root = ttk.Window(themename="flatly")
+    global status_alerta_var, tipo_alerta_var
+    root = ttk.Window(themename=tema_atual)
     root.title("Envio de Alertas")
     window_width = 730
     window_height = 960
@@ -226,11 +278,32 @@ def main():
     border_frame = ttk.Labelframe(scrolled_frame, text="Envio de Comunicação de Crise", padding=(10, 10, 5, 10))
     border_frame.pack(pady=10, padx=10, fill='both', expand=True)
 
+    def toggle_fields():
+        checkpoint_date_label.pack_forget()
+        checkpoint_date_entry.pack_forget()
+        impacto_normalizado_label.pack_forget()
+        impacto_normalizado_entry.pack_forget()
+        if tipo_alerta_var.get() == "Crise":
+            status_gmud_frame.pack_forget()
+            atividade_label.pack_forget()
+            atividade_entry.pack_forget()
+            meet_gmud_label.pack_forget()
+            meet_gmud_entry.pack_forget()
+            status_alerta_frame.pack(pady=10, after=tipo_alerta_frame)
+        elif tipo_alerta_var.get() == "GMUD":
+            status_alerta_frame.pack_forget()
+            status_gmud_frame.pack(pady=10, after=tipo_alerta_frame)
+            atividade_label.pack(pady=10, after=number_key_entry)
+            atividade_entry.pack(pady=10, after=atividade_label)
+            meet_gmud_label.pack(pady=10, after=number_key_entry)
+            meet_gmud_entry.pack(pady=10, after=meet_gmud_label)
+
     tipo_alerta_frame = ttk.Frame(border_frame)
     tipo_alerta_frame.pack(pady=10)
-    tipo_alerta_var = ttk.StringVar()
-    ttk.Radiobutton(tipo_alerta_frame, text="Crise", variable=tipo_alerta_var, value="Crise").pack(side='left', padx=5)
-    ttk.Radiobutton(tipo_alerta_frame, text="Inc. Crítico", variable=tipo_alerta_var, value="Inc. Crítico").pack(side='left', padx=5)
+    tipo_alerta_var = ttk.StringVar(value="Crise")
+    ttk.Radiobutton(tipo_alerta_frame, text="Crise", variable=tipo_alerta_var, value="Crise", command=toggle_fields).pack(side='left', padx=5)
+    ttk.Radiobutton(tipo_alerta_frame, text="GMUD", variable=tipo_alerta_var, value="GMUD", command=toggle_fields).pack(side='left', padx=5)
+
 
     ttk.Label(border_frame, text="Status:", font=("Arial", 10)).pack(pady=10)
     status_alerta_frame = ttk.Frame(border_frame)
@@ -240,12 +313,23 @@ def main():
     ttk.Radiobutton(status_alerta_frame, text="Equipes seguem atuando", variable=status_alerta_var, value="Equipes seguem atuando", command=toggle_checkpoint_date).pack(side='left', padx=5)
     ttk.Radiobutton(status_alerta_frame, text="Em validação", variable=status_alerta_var, value="Em validação", command=toggle_checkpoint_date).pack(side='left', padx=5)
     ttk.Radiobutton(status_alerta_frame, text="Normalizado", variable=status_alerta_var, value="Normalizado", command=toggle_checkpoint_date).pack(side='left', padx=5)
-
+    
+    status_gmud_frame = ttk.Frame(border_frame)
+    status_gmud_frame.pack(pady=10)
+    
     checkpoint_date_label = ttk.Label(border_frame, text="Data do Checkpoint:", font=("Arial", 10))
     checkpoint_date_entry = ttk.Entry(border_frame, font=("Arial", 10))
 
     impacto_normalizado_label = ttk.Label(border_frame, text="Mensagem de normalização:", font=("Arial", 10))
     impacto_normalizado_entry = ttk.Entry(border_frame, font=("Arial", 10))
+
+    atividade_label = ttk.Label(border_frame, text="Atividade:", font=("Arial", 10))
+    atividade_entry = ttk.Entry(border_frame, font=("Arial", 10))
+
+    meet_gmud_label = ttk.Label(border_frame, text="Link do Meet:", font=("Arial", 10))
+    meet_gmud_entry = ttk.Entry(border_frame, font=("Arial", 10))
+
+    toggle_fields()
 
     number_key_label = ttk.Label(border_frame, text="Número da GV:", font=("Helvetica", 10))
     number_key_label.pack(pady=10)
