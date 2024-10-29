@@ -11,7 +11,7 @@ import json
 
 logging.basicConfig(filename='application_logs.json', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
-tema_atual = "capuccino"
+tema_atual = "simplex"
 def main():
     def create_tag_checkboxes():
         tags = get_tags()
@@ -57,23 +57,20 @@ def main():
 
     def choose_theme():
         global tema_atual
-        available_themes = root.style.theme_names() 
+        available_themes = root.style.theme_names()
         
-        theme_cycle = ["cosmo", "flatly", "darkly"]  
-
+        theme_cycle = ["simplex", "solar", "darkly"]
+        
         if tema_atual in theme_cycle:
             current_index = theme_cycle.index(tema_atual)
             next_index = (current_index + 1) % len(theme_cycle)
             new_theme = theme_cycle[next_index]
         else:
-            new_theme = "darkly"  # If the current theme isn't recognized, set to darkly
+            new_theme = "simplex"  # Se o tema atual não for reconhecido, será iniciado como "simplex"
 
         if new_theme in available_themes:
             root.style.theme_use(new_theme)
             tema_atual = new_theme
-        else:
-            root.style.theme_use("darkly")
-            tema_atual = "darkly"
 
         logging.info(f"Theme changed to: {tema_atual}")
 
@@ -263,7 +260,7 @@ def main():
 
 
     global status_alerta_var, tipo_alerta_var
-    root = ttk.Window(themename="flatly")
+    root = ttk.Window(themename=tema_atual)
     root.title("Envio de Alertas")
     window_width = 730
     window_height = 960
