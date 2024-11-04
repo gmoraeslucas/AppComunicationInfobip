@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import os
 from concurrent.futures import ThreadPoolExecutor
 import logging
+from tkinter import messagebox
 
 load_dotenv()
 
@@ -16,7 +17,7 @@ JIRA_SERVER = os.getenv('JIRA_SERVER')
 JIRA_USER = os.getenv('JIRA_USER')
 JIRA_API_TOKEN = os.getenv('JIRA_API_TOKEN')
 
-def get_jira_from_key(number_key):
+def get_jira_from_key(number_key, tipo_alerta_var):
     jql = f"key = {number_key}"
     url = f"{JIRA_SERVER}/rest/api/3/search"
     auth = HTTPBasicAuth(JIRA_USER, JIRA_API_TOKEN)
@@ -31,12 +32,34 @@ def get_jira_from_key(number_key):
     response = requests.get(url, headers=headers, auth=auth, params=params)
     if response.status_code == 200:
         issues = response.json().get('issues', [])
-        if issues:
-            logging.info(f"Conexão com Jira bem-sucedida para chave {number_key}.")
-            return issues[0]
+        issue_data = issues[0]
+
+        Tipo_Issue_GMUD = issue_data['fields'].get('customfield_10010', None)
+        if Tipo_Issue_GMUD:
+            issue_tipo_gmud = Tipo_Issue_GMUD.get('requestType', {}).get('name', 'Não especificado')
         else:
-            logging.error(f"Nenhuma crise encontrada com o código {number_key}")
-            return None
+            issue_tipo_gmud = 'Não especificado'
+            
+        Tipo_Issue_Crise = issue_data['fields'].get('issuetype', {})
+        issue_tipo_crise = Tipo_Issue_Crise.get('name', 'Não especificado')
+        
+        logging.info(f"Issue_type selecionado: {issue_tipo_gmud}")
+
+        if (issue_tipo_crise == "Crise" and tipo_alerta_var == "GMUD"):
+            logging.error(f"Essa GV se trata de uma {issue_tipo_crise}")
+            messagebox.showerror("Erro", f"A chave {number_key} se trata de uma {issue_tipo_crise}.")
+            return
+        elif ((issue_tipo_gmud == "Pré Aprovada" or issue_tipo_gmud == "Programada" or issue_tipo_gmud == "Emergencial") and tipo_alerta_var == "Crise"):
+            logging.error(f"Essa GV se trata de uma {issue_tipo_gmud}")
+            messagebox.showerror("Erro", f"A chave {number_key} se trata de uma GMUD {issue_tipo_gmud}.")
+            return
+        else:
+            if issues:
+                logging.info(f"Conexão com Jira bem-sucedida para chave {number_key}.")
+                return issues[0]
+            else:
+                logging.error(f"Nenhuma crise encontrada com o código {number_key}")
+                return None
     else:
         logging.error(f"Erro ao acessar o Jira: {response.status_code} - {response.text}")
         return None
@@ -329,11 +352,11 @@ def escolher_templates(tipo_alerta, status, issue_checkpoint, issue_impacto_norm
     else:
         return []
     
-def escolher_templates_gmud(tipo_alerta_var, issue_atividade, issue_meet_gmud):
+def escolher_templates_gmud(tipo_alerta_var, issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud):
     templates_gmud = {
         'gmud': [
-            ('gmud_negocio_v2', [issue_sistema, issue_tipo, issue_ambiente, issue_atividade, issue_inicio, issue_termino]),
-            ('gmud_tecnico_v4', [issue_sistema, issue_tipo, issue_ticket, issue_ambiente, issue_atividade, issue_meet_gmud, issue_inicio, issue_termino])
+            ('gmud_negocio_v2', [issue_sistema, issue_tipo, issue_ambiente, issue_atividade_negocio, issue_inicio, issue_termino]),
+            ('gmud_tecnico_v4', [issue_sistema, issue_tipo, issue_ticket, issue_ambiente, issue_atividade_tecnica, issue_meet_gmud, issue_inicio, issue_termino])
         ]
     }
     if tipo_alerta_var == "GMUD":
@@ -383,7 +406,6 @@ def process_issue_data(issue_data):
     return {
         'ticket': issue_ticket,
         'sistema': issue_sistema,
-        'prioridade': issue_prioridade,
         'impacto': issue_impacto,
         'inicio': issue_inicio,
         'termino': issue_termino,
@@ -402,7 +424,7 @@ def process_issue_data_gmud(issue_data):
 
     Tipo = issue_data['fields'].get('customfield_10010', {})
     issue_tipo = Tipo.get('requestType', {}).get('name', 'Não especificado')
-    
+
     Inicio = issue_data['fields'].get('customfield_10774', None)
     issue_inicio = format_date(Inicio)
     
@@ -422,10 +444,10 @@ def load_templates():
 
 TEMPLATES = load_templates()
 
-def format_template(template_name, issue_status, issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var, issue_atividade, issue_meet_gmud):
+def format_template(template_name, issue_status, issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var, issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud):
     template = TEMPLATES.get(template_name, "")
     if template:
-        if (issue_status == "Normalizado" or issue_status == "Em validação"):
+        if ((issue_status == "Normalizado" or issue_status == "Em validação") and tipo_alerta_var != "GMUD"):
             formatted_text = template.format(
                 issue_sistema=issue_sistema,
                 issue_prioridade=issue_prioridade,
@@ -437,7 +459,7 @@ def format_template(template_name, issue_status, issue_impacto_normalizado, issu
                 issue_checkpoint=issue_checkpoint,
                 issue_termino=issue_termino
             )
-        elif (issue_status == "Início" or issue_status == "Equipes seguem atuando"):
+        elif ((issue_status == "Início" or issue_status == "Equipes seguem atuando") and tipo_alerta_var != "GMUD"):
             formatted_text = template.format(
                 issue_sistema=issue_sistema,
                 issue_prioridade=issue_prioridade,
@@ -455,7 +477,8 @@ def format_template(template_name, issue_status, issue_impacto_normalizado, issu
                 issue_tipo=issue_tipo,
                 issue_ticket=issue_ticket,
                 issue_ambiente=issue_ambiente,
-                issue_atividade=issue_atividade,
+                issue_atividade_tecnica=issue_atividade_tecnica,
+                issue_atividade_negocio=issue_atividade_negocio,
                 issue_meet_gmud=issue_meet_gmud,
                 issue_inicio=issue_inicio,
                 issue_termino=issue_termino

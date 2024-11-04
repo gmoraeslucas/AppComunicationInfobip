@@ -13,9 +13,16 @@ logging.basicConfig(filename='application_logs.json', level=logging.DEBUG, forma
 
 tema_atual = "simplex"
 def main():
-    def create_tag_checkboxes():
-        tags = get_tags()
-        tags_to_activate = ["Command_Center", "Governança de TI", "Crises - TIVIT", "Infraestrutura - CSC", "Infraestrutura - TI"]
+    tags = get_tags()
+    def active_tag_checkboxes():
+        if tipo_alerta_var.get() == "Crise":
+            tags_to_activate = ["Command_Center", "Governança de TI", "Crises - TIVIT", "Infraestrutura - CSC", "Infraestrutura - TI"]
+        elif tipo_alerta_var.get() == "GMUD":
+            tags_to_activate = ["Command_Center", "Governança de TI", "Mudanças - TIVIT", "Infraestrutura - CSC", "Infraestrutura - TI"]
+
+        for widget in tags_frame_tecnico.winfo_children():
+            widget.destroy()
+
         for tag in tags:
             var = IntVar()
             if tag in tags_to_activate:
@@ -103,12 +110,13 @@ def main():
         status_alerta = status_alerta_var.get().lower()
         
         number_key = number_key_entry.get()
-        issue_data = get_jira_from_key(number_key)
+        issue_data = get_jira_from_key(number_key, tipo_alerta_var.get())
             
         if issue_data:
             global issue_checkpoint
             global issue_impacto_normalizado
-            global issue_atividade
+            global issue_atividade_tecnica
+            global issue_atividade_negocio
             global issue_meet_gmud
             if tipo_alerta_var.get() == "Crise":
                 process_issue_data(issue_data)
@@ -124,21 +132,25 @@ def main():
                     tipo_alerta_email = "Inc. Crítico"
 
             elif tipo_alerta_var.get() == "GMUD":
-                Tipo = issue_data['fields'].get('customfield_10010', {})
-                issue_tipo = Tipo.get('requestType', {}).get('name', 'Não especificado')
+                Tipo = issue_data['fields'].get('customfield_10010', None)
+                if Tipo:
+                    issue_tipo = Tipo.get('requestType', {}).get('name', 'Não especificado')
+                else:
+                    issue_tipo = 'Não especificado'
                 process_issue_data_gmud(issue_data)
                 tipo_alerta_email = f"Mudança {issue_tipo}"
                 
             issue_checkpoint = checkpoint_date_entry.get()
             issue_impacto_normalizado = impacto_normalizado_entry.get()
-            issue_atividade = atividade_entry.get()
+            issue_atividade_tecnica = atividade_tecnica_entry.get()
+            issue_atividade_negocio = atividade_negocio_entry.get()
             issue_meet_gmud = meet_gmud_entry.get()
             
 
             if tipo_alerta_var.get() == "Crise":
                 templates = escolher_templates(tipo_alerta, status_alerta, issue_checkpoint, issue_impacto_normalizado)
             elif tipo_alerta_var.get() == "GMUD":
-                templates = escolher_templates_gmud(tipo_alerta_var.get(), issue_atividade, issue_meet_gmud)
+                templates = escolher_templates_gmud(tipo_alerta_var.get(), issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud)
 
             if templates:
                 if not verificar_placeholders(templates):
@@ -190,7 +202,7 @@ def main():
             preview_text_gmud_negocio = ""
 
             for template_name, _ in templates:
-                formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade, issue_meet_gmud)
+                formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud)
                 if "tecnico" in template_name:
                     preview_text_tecnico += formatted_message + "\n\n"
                 if "negocios" in template_name:
@@ -224,24 +236,24 @@ def main():
                     
                     if "tecnico" in template_name:
                         for destinatario in destinatarios_tecnico:
-                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade, issue_meet_gmud)
+                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud)
                             futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params))
                             logging.info(f"Enviando mensagem WhatsApp para {destinatario}.")
                     if "negocio" in template_name:
                         for destinatario in destinatarios_negocios:
-                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade, issue_meet_gmud)
+                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud)
                             futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params))
                             logging.info(f"Enviando mensagem WhatsApp para {destinatario}.")
 
                 for template_name, params in templates:
                     if "tecnico" in template_name:
                         for destinatario in emails_tecnico:
-                            formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade, issue_meet_gmud))
+                            formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud))
                             futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_email, formatted_message_html))
                             logging.info(f"Enviando email para {destinatario}.")
                     if "negocio" in template_name:
                         for destinatario in emails_negocios:
-                            formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade, issue_meet_gmud))
+                            formatted_message_html = format_template_html(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud))
                             futures.append(executor.submit(enviar_email_com_template_infobip, destinatario, tipo_alerta_email, formatted_message_html))
                             logging.info(f"Enviando email para {destinatario}.")
 
@@ -279,22 +291,27 @@ def main():
     border_frame.pack(pady=10, padx=10, fill='both', expand=True)
 
     def toggle_fields():
+        active_tag_checkboxes() #Para ser ativado no mesmo botão com a variavél tipo_alerta_var.
         checkpoint_date_label.pack_forget()
         checkpoint_date_entry.pack_forget()
         impacto_normalizado_label.pack_forget()
         impacto_normalizado_entry.pack_forget()
         if tipo_alerta_var.get() == "Crise":
             status_gmud_frame.pack_forget()
-            atividade_label.pack_forget()
-            atividade_entry.pack_forget()
+            atividade_tecnica_label.pack_forget()
+            atividade_tecnica_entry.pack_forget()
+            atividade_negocio_label.pack_forget()
+            atividade_negocio_entry.pack_forget()
             meet_gmud_label.pack_forget()
             meet_gmud_entry.pack_forget()
             status_alerta_frame.pack(pady=10, after=tipo_alerta_frame)
         elif tipo_alerta_var.get() == "GMUD":
             status_alerta_frame.pack_forget()
             status_gmud_frame.pack(pady=10, after=tipo_alerta_frame)
-            atividade_label.pack(pady=10, after=number_key_entry)
-            atividade_entry.pack(pady=10, after=atividade_label)
+            atividade_tecnica_label.pack(pady=10, after=number_key_entry)
+            atividade_tecnica_entry.pack(pady=10, after=atividade_tecnica_label)
+            atividade_negocio_label.pack(pady=10, after=number_key_entry)
+            atividade_negocio_entry.pack(pady=10, after=atividade_negocio_label)
             meet_gmud_label.pack(pady=10, after=number_key_entry)
             meet_gmud_entry.pack(pady=10, after=meet_gmud_label)
 
@@ -304,8 +321,6 @@ def main():
     ttk.Radiobutton(tipo_alerta_frame, text="Crise", variable=tipo_alerta_var, value="Crise", command=toggle_fields).pack(side='left', padx=5)
     ttk.Radiobutton(tipo_alerta_frame, text="GMUD", variable=tipo_alerta_var, value="GMUD", command=toggle_fields).pack(side='left', padx=5)
 
-
-    ttk.Label(border_frame, text="Status:", font=("Arial", 10)).pack(pady=10)
     status_alerta_frame = ttk.Frame(border_frame)
     status_alerta_frame.pack(pady=10)
     status_alerta_var = ttk.StringVar()
@@ -321,15 +336,16 @@ def main():
     checkpoint_date_entry = ttk.Entry(border_frame, font=("Arial", 10))
 
     impacto_normalizado_label = ttk.Label(border_frame, text="Mensagem de normalização:", font=("Arial", 10))
-    impacto_normalizado_entry = ttk.Entry(border_frame, font=("Arial", 10))
+    impacto_normalizado_entry = ttk.Entry(border_frame, font=("Arial", 10), width=40)
 
-    atividade_label = ttk.Label(border_frame, text="Atividade:", font=("Arial", 10))
-    atividade_entry = ttk.Entry(border_frame, font=("Arial", 10))
+    atividade_tecnica_label = ttk.Label(border_frame, text="Atividade Técnica:", font=("Arial", 10))
+    atividade_tecnica_entry = ttk.Entry(border_frame, font=("Arial", 10), width=40)
+
+    atividade_negocio_label = ttk.Label(border_frame, text="Atividade Negócio:", font=("Arial", 10))
+    atividade_negocio_entry =  ttk.Entry(border_frame, font=("Arial", 10), width=40)
 
     meet_gmud_label = ttk.Label(border_frame, text="Link do Meet:", font=("Arial", 10))
     meet_gmud_entry = ttk.Entry(border_frame, font=("Arial", 10))
-
-    toggle_fields()
 
     number_key_label = ttk.Label(border_frame, text="Número da GV:", font=("Helvetica", 10))
     number_key_label.pack(pady=10)
@@ -349,7 +365,9 @@ def main():
     scrolled_frame_tecnico = ScrolledFrame(tags_border_frame_tecnico, width=300, height=300, autohide=True)
     scrolled_frame_tecnico.pack(pady=10, padx=10)
     tags_frame_tecnico = scrolled_frame_tecnico
-    create_tag_checkboxes()
+    active_tag_checkboxes()
+
+    toggle_fields()
 
     negocios_frame = ttk.Frame(tags_container_frame)
     negocios_frame.pack(side='left', padx=10)

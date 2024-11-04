@@ -15,8 +15,8 @@
     "validacao_critico_negocios": "*Governança de TI informa:*\n\nIncidente Crítico: {issue_sistema}\nStatus: {issue_status}\n{issue_impacto}\nInício: {issue_inicio}\n\nEsta é uma mensagem automática. Por favor, não responda!",
     "encerramento_critico_tecnico": "*Governança de TI informa:*\n\nIncidente Crítico\nAmbiente Impactado: {issue_sistema}\nPrioridade: {issue_prioridade}\nTicket: {issue_ticket}\nStatus: {issue_status}\n{issue_impacto}\nInício: {issue_inicio}\nTérmino: {issue_termino}\n\nEsta é uma mensagem automática. Por favor, não responda!",
     "encerramento_critico_negocios": "*Governança de TI informa:*\n\nIncidente Crítico: {issue_sistema}\nStatus: {issue_status}\n{issue_impacto}\nInício: {issue_inicio}\nTérmino: {issue_termino}\n\nEsta é uma mensagem automática. Por favor, não responda!",
-    "gmud_negocio_v2": "*Governança de TI informa:*\n\nGMUD: {issue_sistema}\nTipo: {issue_tipo}\nAmbiente: {issue_ambiente}\nAtividade: {issue_atividade}\nInício: {issue_inicio}\nTérmino: {issue_termino}\n\nEsta é uma mensagem automática. Por favor, não responda!",
-    "gmud_tecnico_v4": "*Governança de TI informa:*\n\nGMUD: {issue_sistema}\nTipo: {issue_tipo}\nTicket: {issue_ticket}\nAmbiente: {issue_ambiente}\nAtividade: {issue_atividade}\nLink da videochamada: {issue_meet_gmud}\nInício: {issue_inicio}\nTérmino: {issue_termino}\n\nEsta é uma mensagem automática. Por favor, não responda!"
+    "gmud_negocio_v2": "*Governança de TI informa:*\n\nGMUD: {issue_sistema}\nTipo: {issue_tipo}\nAmbiente: {issue_ambiente}\nAtividade: {issue_atividade_negocio}\nInício: {issue_inicio}\nTérmino: {issue_termino}\n\nEsta é uma mensagem automática. Por favor, não responda!",
+    "gmud_tecnico_v4": "*Governança de TI informa:*\n\nGMUD: {issue_sistema}\nTipo: {issue_tipo}\nTicket: {issue_ticket}\nAmbiente: {issue_ambiente}\nAtividade: {issue_atividade_tecnica}\nLink da videochamada: {issue_meet_gmud}\nInício: {issue_inicio}\nTérmino: {issue_termino}\n\nEsta é uma mensagem automática. Por favor, não responda!"
 
 
 }
