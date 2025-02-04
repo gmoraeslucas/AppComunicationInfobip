@@ -7,6 +7,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 import logging
 from tkinter import messagebox
+import re
 
 load_dotenv()
 
@@ -489,5 +490,9 @@ def format_template(template_name, issue_status, issue_impacto_normalizado, issu
     return ""
 
 def format_template_html(formatted_text):
-    formatted_html = formatted_text.replace("\n", "<br>").replace("*", "<strong>").replace("_", "<em>")
+
+    formatted_html = re.sub(r'\*(.*?)\*', r'<strong>\1</strong>', formatted_text)
+    formatted_html = formatted_html.replace("\n", "<br>")
+    formatted_html = re.sub(r'_(.*?)_', r'<em>\1</em>', formatted_html)
+    
     return formatted_html
