@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 import logging
 from tkinter import messagebox
 import re
+from tkinter import IntVar
 
 load_dotenv()
 
@@ -17,6 +18,17 @@ API_KEY_INFOBIP = os.getenv('API_KEY_INFOBIP')
 JIRA_SERVER = os.getenv('JIRA_SERVER')
 JIRA_USER = os.getenv('JIRA_USER')
 JIRA_API_TOKEN = os.getenv('JIRA_API_TOKEN')
+AUTH_CLIENT_ID = os.getenv("AUTH_CLIENT_ID")
+AUTH_CLIENT_SECRET = os.getenv("AUTH_CLIENT_SECRET")
+SMS_TEMPLATE_ID = os.getenv("SMS_TEMPLATE_ID")
+MODO_SMS = False 
+
+def set_modo_sms(value: bool):
+    global MODO_SMS
+    MODO_SMS = bool(value)
+
+def is_modo_sms() -> bool:
+    return MODO_SMS
 
 def get_jira_from_key(number_key, tipo_alerta_var):
     jql = f"key = {number_key}"
@@ -228,7 +240,70 @@ def get_emails_by_tags(tag_names):
 
     return list(set(all_emails))
 
-def enviar_alerta_whatsapp_com_template(destinatario, template_name, parametros, language_code='pt_BR'):
+def obter_token_sms():
+    """
+    Chama a API de autenticação para obter token de acesso.
+    Retorna o token como string ou None em caso de erro.
+    """
+    AUTH_URL = "https://rhsso-internal.segurosunimed.com.br/auth/realms/unimed-internos/protocol/openid-connect/token"
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    data = {
+        "client_id": AUTH_CLIENT_ID,
+        "client_secret": AUTH_CLIENT_SECRET,
+        "grant_type": "client_credentials"
+    }
+    try:
+        resp = requests.post(AUTH_URL, headers=headers, data=data, timeout=10)
+        if resp.status_code == 200:
+            token = resp.json().get("access_token")
+            if token:
+                logging.info("Token SMS obtido com sucesso.")
+                return token
+            else:
+                logging.error("Resposta sem 'access_token': %s", resp.text)
+        else:
+            logging.error(f"Falha ao obter token ({resp.status_code}): {resp.text}")
+    except Exception as e:
+        logging.exception("Erro na requisição de token SMS")
+    return None
+
+def enviar_sms_interno(destinatario, token, formatted_message):
+    """
+    Envia SMS via API interna, obtendo token antes.
+    """
+    
+    SMS_URL = "https://unicom-api.digital-segurosunimed.com/channels/SMS/messages"
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json; charset=UTF-8",
+        "User-Agent": "gov-communication-api"
+    }
+    payload = {
+        "recipients": [{
+            "name": "Seguros Unimed",
+            "number": str(destinatario)
+        }],
+        "templateId": SMS_TEMPLATE_ID,
+        "templateAttributes": {
+            "message": formatted_message or {}
+        }
+    }
+
+    try:
+        resp = requests.post(SMS_URL, headers=headers, json=payload, timeout=30)
+        if 200 <= resp.status_code < 300:
+            logging.info(f"SMS enviado com sucesso para {destinatario}.")
+        else:
+            logging.error(f"Falha ao enviar SMS ({resp.status_code}): {resp.text}")
+            messagebox.showerror("Erro SMS", f"Falha ao enviar SMS ({resp.status_code}).")
+    except Exception as e:
+        logging.exception("Erro ao enviar SMS")
+        messagebox.showerror("Erro SMS", f"Exceção ao enviar SMS: {e}")
+
+def enviar_alerta_whatsapp_com_template(destinatario, template_name, parametros, token, formatted_message, language_code='pt_BR'):
+    if is_modo_sms():
+        return enviar_sms_interno(destinatario, token, formatted_message)
     URL = 'https://api.infobip.com/whatsapp/1/message/template'
     headers = {
         'Authorization': f'App {API_KEY_INFOBIP}',
@@ -494,5 +569,11 @@ def format_template_html(formatted_text):
     formatted_html = re.sub(r'\*(.*?)\*', r'<strong>\1</strong>', formatted_text)
     formatted_html = formatted_html.replace("\n", "<br>")
     formatted_html = re.sub(r'_(.*?)_', r'<em>\1</em>', formatted_html)
+    
+    return formatted_html
+
+def format_template_sms(formatted_html):
+
+    formatted_html = formatted_html.replace("*", "")
     
     return formatted_html
