@@ -3,7 +3,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.scrolled import ScrolledFrame
 from ttkbootstrap.constants import *
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from main import escolher_templates_gmud, get_jira_from_key, get_tags, get_numbers_by_tags, get_emails_by_tags, enviar_alerta_whatsapp_com_template, enviar_email_com_template_infobip, escolher_templates, process_issue_data, verificar_placeholders, format_template, format_template_html, process_issue_data_gmud
+from main import format_template_sms, obter_token_sms, set_modo_sms, is_modo_sms, escolher_templates_gmud, get_jira_from_key, get_tags, get_numbers_by_tags, get_emails_by_tags, enviar_alerta_whatsapp_com_template, enviar_email_com_template_infobip, escolher_templates, process_issue_data, verificar_placeholders, format_template, format_template_html, process_issue_data_gmud
 from PIL import Image, ImageTk
 import logging
 import threading
@@ -32,7 +32,7 @@ def main():
             tags_vars_tecnico[tag] = var
     
     def populate_negocios_tags():
-        tags_to_activate = ["Command_Center", "Negócios", "Governança de TI"]
+        tags_to_activate = ["Command_Center", "Negócios", "Governança de TI", "Teste Lucas"]
         for tag in tags_to_activate:
             var = IntVar()
             var.set(1)
@@ -66,7 +66,7 @@ def main():
         global tema_atual
         available_themes = root.style.theme_names()
         
-        theme_cycle = ["simplex", "solar", "darkly"]
+        theme_cycle = ["simplex", "darkly"]
         
         if tema_atual in theme_cycle:
             current_index = theme_cycle.index(tema_atual)
@@ -227,6 +227,9 @@ def main():
 
     def confirm_send(confirmation_window, templates):
         confirmation_window.destroy()
+        token = ""
+        if is_modo_sms():
+            token = obter_token_sms()
 
         def send_messages():
             with ThreadPoolExecutor(max_workers=10) as executor:
@@ -236,13 +239,13 @@ def main():
                     
                     if "tecnico" in template_name:
                         for destinatario in destinatarios_tecnico:
-                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud)
-                            futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params))
+                            formatted_message = format_template_sms(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud))
+                            futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params, token, formatted_message))
                             logging.info(f"Enviando mensagem WhatsApp para {destinatario}.")
                     if "negocio" in template_name:
                         for destinatario in destinatarios_negocios:
-                            formatted_message = format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud)
-                            futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params))
+                            formatted_message = format_template_sms(format_template(template_name, status_alerta_var.get(), issue_impacto_normalizado, issue_checkpoint, tipo_alerta_var.get(), issue_atividade_tecnica, issue_atividade_negocio, issue_meet_gmud))
+                            futures.append(executor.submit(enviar_alerta_whatsapp_com_template, destinatario, template_name, params, token, formatted_message))
                             logging.info(f"Enviando mensagem WhatsApp para {destinatario}.")
 
                 for template_name, params in templates:
@@ -290,8 +293,17 @@ def main():
     border_frame = ttk.Labelframe(scrolled_frame, text="Envio de Comunicação de Crise", padding=(10, 10, 5, 10))
     border_frame.pack(pady=10, padx=10, fill='both', expand=True)
 
+    modo_sms_var = ttk.BooleanVar(value=is_modo_sms())
+
+    def alternar_modo_sms():
+        set_modo_sms(not modo_sms_var.get()) 
+        modo_sms_var.set(is_modo_sms())  
+        btn_sms_toggle.configure(
+            text=("Desativar modo SMS" if modo_sms_var.get() else "Ativar modo SMS") 
+        )
+    
     def toggle_fields():
-        active_tag_checkboxes() #Para ser ativado no mesmo botão com a variavél tipo_alerta_var.
+        active_tag_checkboxes()
         checkpoint_date_label.pack_forget()
         checkpoint_date_entry.pack_forget()
         impacto_normalizado_label.pack_forget()
@@ -400,7 +412,16 @@ def main():
     logo2_label = ttk.Label(logos_frame, image=logo2)
     logo2_label.pack(side="left", padx=40)
 
-    ttk.Button(border_frame, text="Alternar Tema", command=choose_theme).pack(side='left', padx=5)
+    def commands():
+        alternar_modo_sms()
+        choose_theme()
+
+    btn_sms_toggle = ttk.Button(
+        border_frame,
+        text=("Desativar modo SMS" if modo_sms_var.get() else "Ativar modo SMS"),
+        command=commands,
+    )
+    btn_sms_toggle.pack(side="left", pady=5)
 
     root.mainloop()
 
