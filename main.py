@@ -31,51 +31,72 @@ def is_modo_sms() -> bool:
     return MODO_SMS
 
 def get_jira_from_key(number_key, tipo_alerta_var):
-    jql = f"key = {number_key}"
-    url = f"{JIRA_SERVER}/rest/api/3/search"
+    url = f"{JIRA_SERVER}/rest/api/3/search/jql"
     auth = HTTPBasicAuth(JIRA_USER, JIRA_API_TOKEN)
     headers = {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Content-Type": "application/json"
     }
-    params = {
-        'jql': jql,
-        'maxResults': 1
+
+    jql = f"key = {number_key}"
+    payload = {
+        "jql": jql,
+        "maxResults": 1,
+        "fields": [
+            "issuetype",
+            "customfield_10010",  # Tipo de GMUD
+            "customfield_10273",  # Sistema
+            "customfield_10371",  # Prioridade
+            "customfield_11335",  # Impacto (ADF)
+            "customfield_11735",  # Meet crise
+            "customfield_10231",  # Início Crise
+            "customfield_10753",  # Término Crise
+            "customfield_10774",  # Início GMUD
+            "customfield_10775"   # Término GMUD
+        ]
     }
-    logging.info(f"Buscando crise com chave: {number_key}")
-    response = requests.get(url, headers=headers, auth=auth, params=params)
+
+    logging.info(f"Buscando crise com chave: {number_key} (enhanced search)")
+    response = requests.post(url, headers=headers, auth=auth, data=json.dumps(payload), timeout=20)
+
     if response.status_code == 200:
         issues = response.json().get('issues', [])
+        if not issues:
+            logging.error(f"Nenhum item encontrado com a chave {number_key}")
+            return None
+
         issue_data = issues[0]
 
-        Tipo_Issue_GMUD = issue_data['fields'].get('customfield_10010', None)
+        Tipo_Issue_GMUD = issue_data['fields'].get('customfield_10010')
         if Tipo_Issue_GMUD:
             issue_tipo_gmud = Tipo_Issue_GMUD.get('requestType', {}).get('name', 'Não especificado')
         else:
             issue_tipo_gmud = 'Não especificado'
-            
-        Tipo_Issue_Crise = issue_data['fields'].get('issuetype', {})
+
+        Tipo_Issue_Crise = issue_data['fields'].get('issuetype', {}) or {}
         issue_tipo_crise = Tipo_Issue_Crise.get('name', 'Não especificado')
-        
+
         logging.info(f"Issue_type selecionado: {issue_tipo_gmud}")
 
         if (issue_tipo_crise == "Crise" and tipo_alerta_var == "GMUD"):
             logging.error(f"Essa GV se trata de uma {issue_tipo_crise}")
             messagebox.showerror("Erro", f"A chave {number_key} se trata de uma {issue_tipo_crise}.")
             return
-        elif ((issue_tipo_gmud == "Pré Aprovada" or issue_tipo_gmud == "Programada" or issue_tipo_gmud == "Emergencial") and tipo_alerta_var == "Crise"):
+        elif ((issue_tipo_gmud in {"Pré Aprovada","Programada","Emergencial"}) and tipo_alerta_var == "Crise"):
             logging.error(f"Essa GV se trata de uma {issue_tipo_gmud}")
             messagebox.showerror("Erro", f"A chave {number_key} se trata de uma GMUD {issue_tipo_gmud}.")
             return
         else:
-            if issues:
-                logging.info(f"Conexão com Jira bem-sucedida para chave {number_key}.")
-                return issues[0]
-            else:
-                logging.error(f"Nenhuma crise encontrada com o código {number_key}")
-                return None
+            logging.info(f"Conexão com Jira bem-sucedida para chave {number_key}.")
+            return issue_data
+
     else:
-        logging.error(f"Erro ao acessar o Jira: {response.status_code} - {response.text}")
-        return None
+        try:
+            err = response.json()
+        except Exception:
+            err = {"text": response.text}
+        logging.error(f"Erro ao acessar o Jira: {response.status_code} - {err}")
+
 
 def extract_text_from_Impacto(Impacto):
     text = ""
