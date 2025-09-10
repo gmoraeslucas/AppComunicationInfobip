@@ -32,7 +32,7 @@ def main():
             tags_vars_tecnico[tag] = var
     
     def populate_negocios_tags():
-        tags_to_activate = ["Command_Center", "Negócios", "Governança de TI", "Teste Lucas"]
+        tags_to_activate = ["Command_Center", "Negócios", "Governança de TI"]
         for tag in tags_to_activate:
             var = IntVar()
             var.set(1)
