@@ -1,3 +1,5 @@
+import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox, IntVar, scrolledtext, Toplevel
 import ttkbootstrap as ttk
 from ttkbootstrap.scrolled import ScrolledFrame
@@ -32,10 +34,11 @@ def main():
             tags_vars_tecnico[tag] = var
     
     def populate_negocios_tags():
-        tags_to_activate = ["Command_Center", "Negócios", "Governança de TI"]
+        tags_to_activate = ["Command_Center", "Negócios", "Governança de TI", "Unicred", "N1 - Gov"]
         for tag in tags_to_activate:
             var = IntVar()
-            var.set(1)
+            if tag == "Command_Center" or tag == "Negócios" or tag == "Governança de TI" or tag == "N1 - Gov":
+                var.set(1)
             checkbox = ttk.Checkbutton(tags_frame_negocios, text=tag, variable=var)
             checkbox.pack(anchor='w')
             tags_vars_negocios[tag] = var
@@ -80,6 +83,20 @@ def main():
             tema_atual = new_theme
 
         logging.info(f"Theme changed to: {tema_atual}")
+
+    def limpar_espacos(event):
+        # O widget que disparou o evento (o campo que perdeu o foco)
+        widget = event.widget
+        texto_atual = widget.get()
+        
+        # Se houver texto, remove espaços das pontas e atualiza o campo visualmente
+        if texto_atual:
+            texto_limpo = texto_atual.strip()
+            # Apenas atualiza se houve mudança para evitar loops desnecessários
+            if texto_atual != texto_limpo:
+                widget.delete(0, tk.END)
+                widget.insert(0, texto_limpo)
+                print(f"Campo limpo: '{texto_atual}' -> '{texto_limpo}'")
 
     def send_message():
 
@@ -349,12 +366,15 @@ def main():
 
     impacto_normalizado_label = ttk.Label(border_frame, text="Mensagem de normalização:", font=("Arial", 10))
     impacto_normalizado_entry = ttk.Entry(border_frame, font=("Arial", 10), width=40)
+    impacto_normalizado_entry.bind("<FocusOut>", limpar_espacos)
 
     atividade_tecnica_label = ttk.Label(border_frame, text="Atividade Técnica:", font=("Arial", 10))
     atividade_tecnica_entry = ttk.Entry(border_frame, font=("Arial", 10), width=40)
+    atividade_tecnica_entry.bind("<FocusOut>", limpar_espacos)
 
     atividade_negocio_label = ttk.Label(border_frame, text="Atividade Negócio:", font=("Arial", 10))
-    atividade_negocio_entry =  ttk.Entry(border_frame, font=("Arial", 10), width=40)
+    atividade_negocio_entry = ttk.Entry(border_frame, font=("Arial", 10), width=40)
+    atividade_negocio_entry.bind("<FocusOut>", limpar_espacos)
 
     meet_gmud_label = ttk.Label(border_frame, text="Link do Meet:", font=("Arial", 10))
     meet_gmud_entry = ttk.Entry(border_frame, font=("Arial", 10))
