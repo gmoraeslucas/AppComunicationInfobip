@@ -34,10 +34,11 @@ def main():
             tags_vars_tecnico[tag] = var
     
     def populate_negocios_tags():
-        tags_to_activate = ["Command_Center", "Negócios", "Governança de TI"]
+        tags_to_activate = ["Command_Center", "Negócios", "Governança de TI", "Unicred", "N1 - Gov"]
         for tag in tags_to_activate:
             var = IntVar()
-            var.set(1)
+            if tag == "Command_Center" or tag == "Negócios" or tag == "Governança de TI" or tag == "N1 - Gov":
+                var.set(1)
             checkbox = ttk.Checkbutton(tags_frame_negocios, text=tag, variable=var)
             checkbox.pack(anchor='w')
             tags_vars_negocios[tag] = var
