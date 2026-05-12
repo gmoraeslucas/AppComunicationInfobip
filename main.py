@@ -325,7 +325,7 @@ def enviar_sms_interno(destinatario, token, formatted_message):
 def enviar_alerta_whatsapp_com_template(destinatario, template_name, parametros, token, formatted_message, language_code='pt_BR'):
     if is_modo_sms():
         return enviar_sms_interno(destinatario, token, formatted_message)
-    URL = 'https://api.infobip.com/whatsapp/1/message/template'
+    URL = 'https://dm62yg.api.infobip.com/whatsapp/1/message/template'
     headers = {
         'Authorization': f'App {API_KEY_INFOBIP}',
         'Content-Type': 'application/json',
